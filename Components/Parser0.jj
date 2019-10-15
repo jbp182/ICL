@@ -1,0 +1,132 @@
+PARSER_BEGIN(Parser)
+
+
+/** ID lister. */
+package Components;
+import Nodes.*;
+public class Parser {
+
+  /** Main entry point. */
+  public static void main(String args[]) {
+    Parser parser = new Parser(System.in);
+    ASTNode exp;
+
+    while (true) {
+    try {
+    exp = parser.Start();
+    exp.eval(new Environment(null)).show();
+    } catch (Exception e) {
+      System.out.println ("Syntax Error!\n" + e.getMessage());
+      parser.ReInit(System.in);
+    }
+    }
+  }
+
+}
+
+PARSER_END(Parser)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\r"
+}
+
+TOKEN :
+{
+  < Num: (["0"-"9"]) + >
+  |
+  < PLUS : "+" >
+  |
+  < MINUS : "-">
+  |
+  < TIMES : "*">
+  |
+  < DIV : "/">
+  |
+  < LPAR : "(" >
+  |
+  < RPAR : ")" >
+  |
+  < EL: "\n" >
+  |
+  <  LET: "let" >
+  |
+  <  IN: "in" >
+  |
+  <  END: "end" >
+  |
+  <  EQ: "=" >
+  | 
+  < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
+}
+
+ASTNode Start():
+{ ASTNode t;
+  Token n; }
+{
+   ( t = Exp() <EL> )
+   { return t; }
+}
+
+ASTNode Exp() :
+{ Token op;
+  ASTNode t1, t2; }
+{
+     t1=Term() ( ( op=<PLUS> | op=<MINUS> ) t2=Term() 
+                 { if (op.kind == PLUS) 
+                         t1 = new ASTPlus(t1,t2);
+                   else  t1 = new ASTSub(t1,t2);
+                 } 
+               ) *
+     { return t1; } 
+}
+
+ASTNode Term() :
+{ Token op;
+  ASTNode f, t;}
+{
+     f=Fact() ( ( op=<TIMES> | op=<DIV> ) t=Fact() 
+			     { if (op.kind == TIMES)
+			     		f = new ASTMul(f,t);
+			     	else f = new ASTDiv(f,t);
+			   	 }
+			   ) *
+	{ return f; }
+}
+
+
+ASTNode Fact() :
+{ Token n, id; 
+  ASTNode t, init, body;}
+{
+    (  n=< Num >   {  t = new ASTNum(Integer.parseInt(n.image)); }
+   | <LPAR> t=Exp() <RPAR>
+   | < MINUS > t=Fact() { t = new ASTMul(new ASTNum(-1), t); }
+   | < PLUS > t=Fact()
+   | id=< Id > { t = new ASTId( id.image ); }
+   | < LET > id = < Id > <EQ > init=Exp() < IN > body=Exp() < END > { t = new ASTLet(id.image, init, body); }
+   )
+   { return t; }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
