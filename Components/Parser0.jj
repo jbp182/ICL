@@ -3,23 +3,43 @@ PARSER_BEGIN(Parser)
 
 /** ID lister. */
 package Components;
-import Nodes.*;
+import Nodes.*;import java.io.FileInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.List;
+
 public class Parser {
 
   /** Main entry point. */
-  public static void main(String args[]) {
+  public static void main(String args[]) throws  Exception {
+
+    if(args.length > 1 && args[0].equals("-f")){
+        compile(args[1]);
+        return;
+    }
+
     Parser parser = new Parser(System.in);
     ASTNode exp;
 
     while (true) {
-    try {
-    exp = parser.Start();
-    exp.eval(new Environment(null)).show();
-    } catch (Exception e) {
-      System.out.println ("Syntax Error!\n" + e.getMessage());
-      parser.ReInit(System.in);
+        try {
+        exp = parser.Start();
+        exp.eval(new Environment(null)).show();
+        } catch (Exception e) {
+          System.out.println ("Syntax Error!\n" + e.getMessage());
+          parser.ReInit(System.in);
+        }
     }
-    }
+  }
+
+  private static void compile(String fileName) throws Exception{
+      File f = new File(fileName);
+      Parser parser = new Parser(new FileInputStream(f));
+      ASTNode exp = parser.Start();
+      List<String> list = exp.compile(new Environment(null));
+      for(String i : list){
+          System.out.println(i);
+      }
   }
 
 }

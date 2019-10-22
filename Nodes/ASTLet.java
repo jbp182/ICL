@@ -2,6 +2,8 @@ package Nodes;
 
 import Values.IValue;
 
+import java.util.List;
+
 public class ASTLet implements ASTNode {
 	
 	String id;
@@ -25,6 +27,11 @@ public class ASTLet implements ASTNode {
 		
 		return v2;
 	}
-	
+
+	@Override
+	public List<String> compile(Environment env) {
+		return null;
+	}
+
 
 }

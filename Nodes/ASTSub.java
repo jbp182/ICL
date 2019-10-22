@@ -3,6 +3,8 @@ import Exceptions.TypeError;
 import Values.IValue;
 import Values.VInt;
 
+import java.util.List;
+
 public class ASTSub implements ASTNode {
 	
 	ASTNode left;
@@ -23,4 +25,12 @@ public class ASTSub implements ASTNode {
 		throw new TypeError("illegal arguments to + operator");
 	}
 
+	@Override
+	public List<String> compile(Environment env) {
+		List<String> leftC = left.compile(env);
+		List<String> rightC = right.compile(env);
+		leftC.addAll(rightC);
+		leftC.add("isub");
+		return leftC;
+	}
 }

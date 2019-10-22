@@ -1,6 +1,9 @@
 package Nodes;
 import Values.IValue;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class ASTId implements ASTNode {
 	
 	String id;
@@ -14,4 +17,8 @@ public class ASTId implements ASTNode {
 		return env.find(id);
 	}
 
+	@Override
+	public List<String> compile(Environment env) {
+		return null;
+	}
 }

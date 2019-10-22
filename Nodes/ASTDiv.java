@@ -3,6 +3,8 @@ import Exceptions.TypeError;
 import Values.IValue;
 import Values.VInt;
 
+import java.util.List;
+
 public class ASTDiv implements ASTNode {
 
 	ASTNode left;
@@ -21,6 +23,15 @@ public class ASTDiv implements ASTNode {
 				return new VInt( ((VInt)v1).getval() / ((VInt)v2).getval() );
 		}
 		throw new TypeError("illegal arguments to + operator");
+	}
+
+	@Override
+	public List<String> compile(Environment env) {
+		List<String> leftC = left.compile(env);
+		List<String> rightC = right.compile(env);
+		leftC.addAll(rightC);
+		leftC.add("idiv");
+		return leftC;
 	}
 
 }
