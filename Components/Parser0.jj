@@ -3,10 +3,8 @@ PARSER_BEGIN(Parser)
 
 /** ID lister. */
 package Components;
-import Nodes.*;import java.io.FileInputStream;
+import LanguageComponents.Envirements.CodeBlock;import LanguageComponents.Envirements.CompilerEnvirement;import LanguageComponents.Envirements.Environment;import LanguageComponents.Nodes.*;import java.io.FileInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.util.List;
 
 public class Parser {
 
@@ -36,10 +34,9 @@ public class Parser {
       File f = new File(fileName);
       Parser parser = new Parser(new FileInputStream(f));
       ASTNode exp = parser.Start();
-      List<String> list = exp.compile(new Environment(null));
-      for(String i : list){
-          System.out.println(i);
-      }
+      CodeBlock blk = new CodeBlock();
+      exp.compile(new CompilerEnvirement(null),blk);
+      blk.dump("Main.j");
   }
 
 }
