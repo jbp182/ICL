@@ -1,12 +1,14 @@
 package LanguageComponents.Envirements;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class CompilerEnvirement {
     private String frameName;
-    public CompilerEnvirement ancestor;
-    public Map<String, String> envMap;
+    private CompilerEnvirement ancestor;
+    private CompilerEnvirement predecessor;
+    private Map<String, String> envMap;
 
     public CompilerEnvirement(CompilerEnvirement env) {
         this.frameName = IdGenerator.genFrameName();
@@ -18,9 +20,13 @@ public class CompilerEnvirement {
         return ancestor;
     }
 
+    public CompilerEnvirement getPredecessor() {
+        return predecessor;
+    }
+
     public CompilerPair find(String id){
         String val = envMap.get(id);
-        CompilerPair pair = null;
+        CompilerPair pair;
 
         if(val == null) {
             pair = ancestor.find(id);
@@ -41,11 +47,33 @@ public class CompilerEnvirement {
     }
 
 
-    public CompilerEnvirement beginScope(){
-        return new CompilerEnvirement(this);
+    public CompilerEnvirement beginScope(CodeBlock blk){
+        CompilerEnvirement env = new CompilerEnvirement(this);
+        this.predecessor = env;
+        genNewObject(blk,env);
+        return env;
+    }
+
+    private void genNewObject(CodeBlock codeBlock, CompilerEnvirement env){
+        codeBlock.emit("new "+env);
+        codeBlock.emit("dup");
+        codeBlock.emit("invokespecial "+env+"/<init>()V");
+        codeBlock.emit("dup");
+        codeBlock.emit("aload 4");
+
+
+        if(env.toString().equals("f0"))
+            codeBlock.emit("putfield "+  env+"/sl Ljava/lang/Object;");
+        else
+            codeBlock.emit("putfield "+  env+"/sl L"+ env.ancestor + ";");
+
+        codeBlock.emit("astore 4");
+
     }
 
     public CompilerEnvirement endScope(CodeBlock blk){
+        blk.genClass(this,new HashSet<>(this.envMap.values()));
+
         blk.emit("aload 4");
         if(frameName.equals("f0"))
             blk.emit("getfield "+frameName + "/sl Ljava/lang/Object;");
@@ -53,6 +81,7 @@ public class CompilerEnvirement {
             blk.emit("getfield "+frameName + "/sl L"+ancestor.frameName + ";");
 
         blk.emit("astore 4");
+        ancestor.predecessor = null;
         return ancestor;
     }
 

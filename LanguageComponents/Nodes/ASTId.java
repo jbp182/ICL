@@ -23,11 +23,18 @@ public class ASTId implements ASTNode {
 		CompilerPair pair = env.find(id);
 
 		codeBlock.emit("aload 4");
+		if(env.getPredecessor() != null)
+			imitGetField(env.getPredecessor(),codeBlock);
+
 		CompilerEnvirement tmp = env;
 		for(int i = 0 ; i < pair.offset;i++){
-			codeBlock.emit("getfield "+tmp+"/sl L"+tmp.getAncestor()+";");
+			imitGetField(env,codeBlock);
 			tmp = tmp.getAncestor();
 		}
 		codeBlock.emit("getfield "+pair.frameId+"/"+pair.variableId+" I");
+	}
+
+	private void imitGetField(CompilerEnvirement env, CodeBlock codeBlock){
+		codeBlock.emit("getfield "+env+"/sl L"+env.getAncestor()+";");
 	}
 }

@@ -34,34 +34,16 @@ public class ASTLet implements ASTNode {
 
 	@Override
 	public void compile(CompilerEnvirement env, CodeBlock codeBlock) {
-		env = env.beginScope();
-		genNewObject(codeBlock,env);
+		env = env.beginScope(codeBlock);
 		genStoreValues(codeBlock,init,env);
 		body.compile(env,codeBlock);
-		codeBlock.genClass(env,new HashSet<>(env.envMap.values()));
 		env = env.endScope(codeBlock);
 	}
 
-	private void genNewObject(CodeBlock codeBlock, CompilerEnvirement env){
-		codeBlock.emit("new "+env);
-		codeBlock.emit("dup");
-		codeBlock.emit("invokespecial "+env+"/<init>()V");
-		codeBlock.emit("dup");
-		codeBlock.emit("aload 4");
-
-
-		if(env.toString().equals("f0"))
-			codeBlock.emit("putfield "+  env+"/sl Ljava/lang/Object;");
-		else
-			codeBlock.emit("putfield "+  env+"/sl L"+ env.ancestor + ";");
-
-		codeBlock.emit("astore 4");
-
-	}
 
 	private void genStoreValues(CodeBlock codeBlock,ASTNode node,CompilerEnvirement env) {
 		codeBlock.emit("aload 4");
-		node.compile(env,codeBlock);
+		node.compile(env.getAncestor(),codeBlock);
 		env.assoc(id, IdGenerator.genVariableName());
 		codeBlock.emit("putfield "+env+"/"+env.find(id).variableId+" I");
 	}

@@ -8,6 +8,7 @@ public class CodeBlock {
 
     public CodeBlock() {
         this.builder = new StringBuilder();
+        createTargetDir();
     }
 
     public void emit(String instruction){
@@ -43,7 +44,7 @@ public class CodeBlock {
         if(env.toString().equals("f0"))
             out.write(".field public sl Ljava/lang/Object;\n");
         else
-            out.write(".field public sl L"+env.ancestor + ";\n");
+            out.write(".field public sl L"+env.getAncestor() + ";\n");
 
         for(String id : ids) {
             out.write(".field public " +id+" I\n");
@@ -61,12 +62,16 @@ public class CodeBlock {
 
     public void dump(String fileName) throws IOException {
         File f = new File("./target/" + fileName);
-        f.mkdirs();
-        f.delete();
         f.createNewFile();
 
         createJFile(f);
         compileJ();
+    }
+
+    private void createTargetDir(){
+        File f = new File("./target/asas");
+        f.mkdirs();
+        f.delete();
     }
 
     private void createJFile(File f){
@@ -79,8 +84,8 @@ public class CodeBlock {
     }
 
     private void createJFileWithException(File f) throws IOException {
-        BufferedReader inInit = new BufferedReader(new InputStreamReader(new FileInputStream(new File("./RessourceFiles/init.j"))));
-        BufferedReader inEnd = new BufferedReader(new InputStreamReader(new FileInputStream(new File("./RessourceFiles/end.j"))));
+        BufferedReader inInit = new BufferedReader(new InputStreamReader(new FileInputStream(new File("./src/RessourceFiles/init.j"))));
+        BufferedReader inEnd = new BufferedReader(new InputStreamReader(new FileInputStream(new File("./src/RessourceFiles/end.j"))));
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
         //Dump init.j
         String line;
@@ -98,7 +103,7 @@ public class CodeBlock {
     private void compileJ(){
         try {
             for (final File fileEntry : (new File("./target")).listFiles()) {
-                runProcess("java -jar ./RessourceFiles/jasmin.jar -d ./target ./target/"+fileEntry.getName());
+                runProcess("java -jar ./src/RessourceFiles/jasmin.jar -d ./target ./target/"+fileEntry.getName());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -124,4 +129,5 @@ public class CodeBlock {
     public String toString(){
         return builder.toString();
     }
+
 }
