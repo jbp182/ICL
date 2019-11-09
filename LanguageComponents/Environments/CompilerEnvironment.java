@@ -47,13 +47,9 @@ public class CompilerEnvironment {
     }
 
     public void assoc(String id, String node){
-    	try {
-    		if (ancestor != null && envMap.get(id) != null)
-        		throw new IdAlreadyExistsException("Error: Id " + id + " already exists.");
-    	} catch(NoSuchIdException e) {}	
-    	
-    	envMap.put(id, node);
-    }
+    	if(envMap.putIfAbsent(id, node) != null)
+    		throw new IdAlreadyExistsException("Error: Id " + id + " already exists.");
+	}
 
 
     public CompilerEnvironment beginScope(CodeBlock blk){
