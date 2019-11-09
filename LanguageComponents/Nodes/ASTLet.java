@@ -25,15 +25,15 @@ public class ASTLet implements ASTNode {
 	@Override
 	public IValue eval(Environment env) {
 
-		env = env.beginScope();
+		Environment newEnv = env.beginScope();
 		
 		while (ids.size() > 0 && inits.size() > 0) {
 			IValue v1 = inits.poll().eval(env);
-			env.assoc(ids.poll(), v1);
+			newEnv.assoc(ids.poll(), v1);
 		}
 		
-		IValue v2 = body.eval(env);
-		env = env.endScope();		
+		IValue v2 = body.eval(newEnv);
+		env = newEnv.endScope();
 		
 		return v2;
 	}
