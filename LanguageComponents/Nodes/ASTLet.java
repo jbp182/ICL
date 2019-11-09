@@ -2,7 +2,9 @@ package LanguageComponents.Nodes;
 
 import LanguageComponents.Values.IValue;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
@@ -24,13 +26,15 @@ public class ASTLet implements ASTNode {
 
 	@Override
 	public IValue eval(Environment env) {
-		
+
+		Map<String,IValue> resultsMap = new HashMap<>();
 		while (ids.size() > 0 && inits.size() > 0) {
-			IValue v1 = inits.poll().eval(env);
-			env = env.beginScope();
-			env.assoc(ids.poll(), v1);
+			resultsMap.put(ids.poll(),inits.poll().eval(env));
 		}
-		
+		env = env.beginScope();
+		for(Map.Entry<String,IValue> entry : resultsMap.entrySet()){
+			env.assoc(entry.getKey(),entry.getValue());
+		}
 		IValue v2 = body.eval(env);
 		env = env.endScope();		
 		
@@ -54,12 +58,13 @@ public class ASTLet implements ASTNode {
 //	}
 	
 	private void genStoreValues(CodeBlock codeBlock,CompilerEnvironment env) {
-		codeBlock.emit("aload 4");
 		while( ids.size() > 0 && inits.size() > 0 ) {
+			codeBlock.emit("aload 4");
 			inits.poll().compile(env.getAncestor(), codeBlock);
 			String id = ids.poll();
-			env.assoc(id, IdGenerator.genVariableName());
-			codeBlock.emit("putfield " + env + "/" + env.find(id).variableId + " I");
+			String compileId = IdGenerator.genVariableName();
+			env.assoc(id, compileId);
+			codeBlock.emit("putfield " + env + "/" + compileId + " I");
 		}
 	}
 

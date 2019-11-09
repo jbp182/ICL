@@ -31,7 +31,7 @@ public class Environment {
     
     public void assoc(String id, IValue val){
     	try {
-    		if (this.find(id) != null)
+    		if (this.envMap.get(id) != null)
         		throw new IdAlreadyExistsException("Error: Id " + id + " already exists.");
     	} catch(NoSuchIdException e) {}	
     	

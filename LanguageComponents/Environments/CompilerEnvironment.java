@@ -32,6 +32,8 @@ public class CompilerEnvironment {
         CompilerPair pair;
 
         if(val == null) {
+            if(ancestor == null)
+                throw new NoSuchIdException("Error: There is no such id ( " + id + " ).");
             pair = ancestor.find(id);
             if(pair == null)
                 throw new NoSuchIdException("Error: There is no such id ( " + id + " ).");
@@ -46,7 +48,7 @@ public class CompilerEnvironment {
 
     public void assoc(String id, String node){
     	try {
-    		if (this.find(id) != null)
+    		if (ancestor != null && envMap.get(id) != null)
         		throw new IdAlreadyExistsException("Error: Id " + id + " already exists.");
     	} catch(NoSuchIdException e) {}	
     	
