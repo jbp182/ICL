@@ -1,4 +1,4 @@
-package LanguageComponents.Envirements;
+package LanguageComponents.Environments;
 
 public class IdGenerator {
     static int variableCounter = 0;

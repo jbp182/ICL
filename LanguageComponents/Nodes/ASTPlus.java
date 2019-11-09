@@ -1,10 +1,10 @@
 package LanguageComponents.Nodes;
 import Exceptions.TypeError;
-import LanguageComponents.Envirements.CodeBlock;
-import LanguageComponents.Envirements.CompilerEnvirement;
-import LanguageComponents.Envirements.Environment;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VInt;
+import LanguageComponents.Environments.CodeBlock;
+import LanguageComponents.Environments.CompilerEnvironment;
+import LanguageComponents.Environments.Environment;
 
 public class ASTPlus implements ASTNode {
 	
@@ -27,7 +27,7 @@ public class ASTPlus implements ASTNode {
 	}
 
 	@Override
-	public void compile(CompilerEnvirement env, CodeBlock codeBlock) {
+	public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
 		left.compile(env,codeBlock);
 		right.compile(env,codeBlock);
 		codeBlock.emit("iadd");

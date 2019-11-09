@@ -36,7 +36,9 @@ public interface ParserConstants {
   /** RegularExpression Id. */
   int EQ = 15;
   /** RegularExpression Id. */
-  int Id = 16;
+  int COMMA = 16;
+  /** RegularExpression Id. */
+  int Id = 17;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -59,6 +61,7 @@ public interface ParserConstants {
     "\"in\"",
     "\"end\"",
     "\"=\"",
+    "\",\"",
     "<Id>",
   };
 

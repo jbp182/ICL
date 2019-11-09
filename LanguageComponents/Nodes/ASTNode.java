@@ -1,13 +1,13 @@
 package LanguageComponents.Nodes;
-import LanguageComponents.Envirements.CodeBlock;
-import LanguageComponents.Envirements.CompilerEnvirement;
-import LanguageComponents.Envirements.Environment;
 import LanguageComponents.Values.IValue;
+import LanguageComponents.Environments.CodeBlock;
+import LanguageComponents.Environments.CompilerEnvironment;
+import LanguageComponents.Environments.Environment;
 
 public interface ASTNode {
 	
 	IValue eval(Environment env);
 
-	void compile(CompilerEnvirement env, CodeBlock codeBlock);
+	void compile(CompilerEnvironment env, CodeBlock codeBlock);
 
 }

@@ -1,13 +1,13 @@
 package LanguageComponents.Nodes;
-import LanguageComponents.Envirements.CodeBlock;
-import LanguageComponents.Envirements.CompilerEnvirement;
-import LanguageComponents.Envirements.Environment;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VInt;
+import LanguageComponents.Environments.CodeBlock;
+import LanguageComponents.Environments.CompilerEnvironment;
+import LanguageComponents.Environments.Environment;
 
 public class ASTNum implements ASTNode {
 	
-	IValue value;
+	VInt value;
 	
 	public ASTNum(int v) {
 		value = new VInt(v);
@@ -19,8 +19,8 @@ public class ASTNum implements ASTNode {
 	}
 
 	@Override
-	public void compile(CompilerEnvirement env, CodeBlock codeBlock) {
-		codeBlock.emit("sipush "+ ((VInt)value).getval());
+	public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
+		codeBlock.emit("sipush "+ value.getval());
 	}
 
 }

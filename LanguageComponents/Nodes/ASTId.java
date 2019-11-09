@@ -1,9 +1,9 @@
 package LanguageComponents.Nodes;
-import LanguageComponents.Envirements.CodeBlock;
-import LanguageComponents.Envirements.CompilerEnvirement;
-import LanguageComponents.Envirements.CompilerPair;
-import LanguageComponents.Envirements.Environment;
 import LanguageComponents.Values.IValue;
+import LanguageComponents.Environments.CodeBlock;
+import LanguageComponents.Environments.CompilerEnvironment;
+import LanguageComponents.Environments.CompilerPair;
+import LanguageComponents.Environments.Environment;
 
 public class ASTId implements ASTNode {
 	
@@ -19,14 +19,14 @@ public class ASTId implements ASTNode {
 	}
 
 	@Override
-	public void compile(CompilerEnvirement env, CodeBlock codeBlock) {
+	public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
 		CompilerPair pair = env.find(id);
 
 		codeBlock.emit("aload 4");
 		if(env.getPredecessor() != null)
 			imitGetField(env.getPredecessor(),codeBlock);
 
-		CompilerEnvirement tmp = env;
+		CompilerEnvironment tmp = env;
 		for(int i = 0 ; i < pair.offset;i++){
 			imitGetField(env,codeBlock);
 			tmp = tmp.getAncestor();
@@ -34,7 +34,7 @@ public class ASTId implements ASTNode {
 		codeBlock.emit("getfield "+pair.frameId+"/"+pair.variableId+" I");
 	}
 
-	private void imitGetField(CompilerEnvirement env, CodeBlock codeBlock){
+	private void imitGetField(CompilerEnvironment env, CodeBlock codeBlock){
 		codeBlock.emit("getfield "+env+"/sl L"+env.getAncestor()+";");
 	}
 }

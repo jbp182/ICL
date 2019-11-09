@@ -3,8 +3,13 @@ PARSER_BEGIN(Parser)
 
 /** ID lister. */
 package Components;
-import LanguageComponents.Envirements.CodeBlock;import LanguageComponents.Envirements.CompilerEnvirement;import LanguageComponents.Envirements.Environment;import LanguageComponents.Nodes.*;import java.io.FileInputStream;
+import LanguageComponents.Environments.CodeBlock;
+import LanguageComponents.Environments.CompilerEnvironment;
+import LanguageComponents.Environments.Environment;
+import LanguageComponents.Nodes.*;
+import java.io.FileInputStream;
 import java.io.File;
+import java.util.LinkedList;
 
 public class Parser {
 
@@ -35,7 +40,7 @@ public class Parser {
       Parser parser = new Parser(new FileInputStream(f));
       ASTNode exp = parser.Start();
       CodeBlock blk = new CodeBlock();
-      exp.compile(new CompilerEnvirement(null),blk);
+      exp.compile(new CompilerEnvironment(null),blk);
       blk.dump("Main.j");
   }
 
@@ -68,20 +73,21 @@ TOKEN :
   |
   < EL: "\n" >
   |
-  <  LET: "let" >
+  < LET: "let" >
   |
-  <  IN: "in" >
+  < IN: "in" >
   |
-  <  END: "end" >
+  < END: "end" >
   |
-  <  EQ: "=" >
+  < EQ: "=" >
+  |
+  < COMMA: "," >
   | 
   < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
 }
 
 ASTNode Start():
-{ ASTNode t;
-  Token n; }
+{ ASTNode t; }
 {
    ( t = Exp() <EL> )
    { return t; }
@@ -102,28 +108,39 @@ ASTNode Exp() :
 
 ASTNode Term() :
 { Token op;
-  ASTNode f, t;}
+  ASTNode f1, f2;}
 {
-     f=Fact() ( ( op=<TIMES> | op=<DIV> ) t=Fact() 
+     f1=Fact() ( ( op=<TIMES> | op=<DIV> ) f2=Fact() 
 			     { if (op.kind == TIMES)
-			     		f = new ASTMul(f,t);
-			     	else f = new ASTDiv(f,t);
+			     		f1 = new ASTMul(f1,f2);
+			     	else f1 = new ASTDiv(f1,f2);
 			   	 }
 			   ) *
-	{ return f; }
+	{ return f1; }
 }
 
 
 ASTNode Fact() :
-{ Token n, id; 
-  ASTNode t, init, body;}
+{ Token n, id, id1, id2; 
+  ASTNode t, init1, init2, body;
+  LinkedList<String> ids;
+  LinkedList<ASTNode> inits;}
 {
     (  n=< Num >   {  t = new ASTNum(Integer.parseInt(n.image)); }
    | <LPAR> t=Exp() <RPAR>
    | < MINUS > t=Fact() { t = new ASTMul(new ASTNum(-1), t); }
    | < PLUS > t=Fact()
    | id=< Id > { t = new ASTId( id.image ); }
-   | < LET > id = < Id > <EQ > init=Exp() < IN > body=Exp() < END > { t = new ASTLet(id.image, init, body); }
+   | < LET > id1 = < Id > <EQ > init1=Exp()
+   			{	ids = new LinkedList();
+   		  		inits = new LinkedList();
+   		  		ids.add(id1.image); inits.add(init1); }
+   		( < COMMA > id2 = < Id > <EQ > init2=Exp()
+   			{ ids.add(id2.image); inits.add(init2); }
+   		)*
+   		< IN > body=Exp() < END >
+   		
+   		{ t = new ASTLet(ids, inits, body); }
    )
    { return t; }
 }

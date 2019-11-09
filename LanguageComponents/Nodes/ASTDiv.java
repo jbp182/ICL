@@ -1,10 +1,10 @@
 package LanguageComponents.Nodes;
 import Exceptions.TypeError;
-import LanguageComponents.Envirements.CodeBlock;
-import LanguageComponents.Envirements.CompilerEnvirement;
-import LanguageComponents.Envirements.Environment;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VInt;
+import LanguageComponents.Environments.CodeBlock;
+import LanguageComponents.Environments.CompilerEnvironment;
+import LanguageComponents.Environments.Environment;
 
 public class ASTDiv implements ASTNode {
 
@@ -23,11 +23,11 @@ public class ASTDiv implements ASTNode {
 			if (v2 instanceof VInt)
 				return new VInt( ((VInt)v1).getval() / ((VInt)v2).getval() );
 		}
-		throw new TypeError("illegal arguments to + operator");
+		throw new TypeError("illegal arguments to / operator");
 	}
 
 	@Override
-	public void compile(CompilerEnvirement env, CodeBlock codeBlock) {
+	public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
 		left.compile(env,codeBlock);
 		right.compile(env,codeBlock);
 		codeBlock.emit("idiv");

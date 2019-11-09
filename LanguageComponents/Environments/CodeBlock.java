@@ -1,4 +1,4 @@
-package LanguageComponents.Envirements;
+package LanguageComponents.Environments;
 
 import java.io.*;
 import java.util.Set;
@@ -22,9 +22,10 @@ public class CodeBlock {
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
         out.write(instruction);
         out.flush();
+        out.close();
     }
 
-    public void genClass(CompilerEnvirement env, Set<String> ids) {
+    public void genClass(CompilerEnvironment env, Set<String> ids) {
         try {
             genClassWithException(env,ids);
         } catch (IOException e) {
@@ -32,7 +33,7 @@ public class CodeBlock {
         }
     }
 
-    private void genClassWithException(CompilerEnvirement env, Set<String> ids) throws IOException {
+    private void genClassWithException(CompilerEnvironment env, Set<String> ids) throws IOException {
         File f = new File("./target/"+ env + ".j");
         f.delete();
         f.createNewFile();
@@ -55,6 +56,7 @@ public class CodeBlock {
         out.write("\treturn\n");
         out.write(".end method\n");
         out.flush();
+        out.close();
 
         System.out.println("Generated: " + f.getPath());
     }
@@ -97,6 +99,8 @@ public class CodeBlock {
             out.write(line+"\n");
         }
         out.flush();
+        
+        inInit.close(); inEnd.close(); out.close();
         System.out.println("Generated: " + f.getPath());
     }
 

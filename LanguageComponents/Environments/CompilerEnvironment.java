@@ -1,26 +1,29 @@
-package LanguageComponents.Envirements;
+package LanguageComponents.Environments;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class CompilerEnvirement {
+import Exceptions.IdAlreadyExistsException;
+import Exceptions.NoSuchIdException;
+
+public class CompilerEnvironment {
     private String frameName;
-    private CompilerEnvirement ancestor;
-    private CompilerEnvirement predecessor;
+    private CompilerEnvironment ancestor;
+    private CompilerEnvironment predecessor;
     private Map<String, String> envMap;
 
-    public CompilerEnvirement(CompilerEnvirement env) {
+    public CompilerEnvironment(CompilerEnvironment env) {
         this.frameName = IdGenerator.genFrameName();
         this.ancestor = env;
         envMap = new HashMap<>();
     }
 
-    public CompilerEnvirement getAncestor() {
+    public CompilerEnvironment getAncestor() {
         return ancestor;
     }
 
-    public CompilerEnvirement getPredecessor() {
+    public CompilerEnvironment getPredecessor() {
         return predecessor;
     }
 
@@ -31,7 +34,7 @@ public class CompilerEnvirement {
         if(val == null) {
             pair = ancestor.find(id);
             if(pair == null)
-                throw new RuntimeException(); //TODO
+                throw new NoSuchIdException("Error: There is no such id ( " + id + " ).");
             pair.offset++;
         }
         else{
@@ -42,19 +45,23 @@ public class CompilerEnvirement {
     }
 
     public void assoc(String id, String node){
-        if (envMap.putIfAbsent(id, node) != null)
-            throw new RuntimeException();	//TODO
+    	try {
+    		if (this.find(id) != null)
+        		throw new IdAlreadyExistsException("Error: Id " + id + " already exists.");
+    	} catch(NoSuchIdException e) {}	
+    	
+    	envMap.put(id, node);
     }
 
 
-    public CompilerEnvirement beginScope(CodeBlock blk){
-        CompilerEnvirement env = new CompilerEnvirement(this);
+    public CompilerEnvironment beginScope(CodeBlock blk){
+        CompilerEnvironment env = new CompilerEnvironment(this);
         this.predecessor = env;
         genNewObject(blk,env);
         return env;
     }
 
-    private void genNewObject(CodeBlock codeBlock, CompilerEnvirement env){
+    private void genNewObject(CodeBlock codeBlock, CompilerEnvironment env){
         codeBlock.emit("new "+env);
         codeBlock.emit("dup");
         codeBlock.emit("invokespecial "+env+"/<init>()V");
@@ -71,7 +78,7 @@ public class CompilerEnvirement {
 
     }
 
-    public CompilerEnvirement endScope(CodeBlock blk){
+    public CompilerEnvironment endScope(CodeBlock blk){
         blk.genClass(this,new HashSet<>(this.envMap.values()));
 
         blk.emit("aload 4");
