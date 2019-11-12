@@ -1,4 +1,4 @@
-package LanguageComponents.Nodes.RelacionalOperators;
+package LanguageComponents.Nodes.RelationalOperators;
 
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
@@ -7,12 +7,12 @@ import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Values.IValue;
 
 //TODO
-public class ASTGreater implements ASTNode {
+public class ASTEquals implements ASTNode {
 
     private ASTNode left;
     private ASTNode right;
 
-    public ASTGreater(ASTNode left, ASTNode right) {
+    public ASTEquals(ASTNode left, ASTNode right) {
         this.left = left;
         this.right = right;
     }

@@ -5,6 +5,7 @@ import LanguageComponents.Values.VInt;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
+import LanguageComponents.Nodes.ASTNode;
 
 public class ASTMul implements ASTNode {
 

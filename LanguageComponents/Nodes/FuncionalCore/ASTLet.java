@@ -8,6 +8,7 @@ import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
 import LanguageComponents.Environments.IdGenerator;
+import LanguageComponents.Nodes.ASTNode;
 
 
 public class ASTLet implements ASTNode {

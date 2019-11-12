@@ -1,4 +1,4 @@
-package LanguageComponents.Nodes.RelacionalOperators;
+package LanguageComponents.Nodes.RelationalOperators;
 
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
