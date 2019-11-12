@@ -1,4 +1,4 @@
-package LanguageComponents.Nodes;
+package LanguageComponents.Nodes.FuncionalCore;
 
 import LanguageComponents.Values.IValue;
 
