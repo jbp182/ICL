@@ -9,8 +9,8 @@ import LanguageComponents.Nodes.ASTNode;
 
 public class ASTMul implements ASTNode {
 
-	ASTNode left;
-	ASTNode right;
+	private ASTNode left;
+	private ASTNode right;
 	
 	public ASTMul(ASTNode v1, ASTNode v2) {
 		left = v1;

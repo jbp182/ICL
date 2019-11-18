@@ -198,12 +198,12 @@ ASTNode Term() :
   ASTNode f1, f2;}
 {
      f1=Fact() ( < ASSIGN > f2=W() { f1 = new ASTAssign(f1,f2); }
-     	       | ( ( op=<TIMES> | op=<DIV> ) f2=Fact() 
+     	        | ( ( op=<TIMES> | op=<DIV> ) f2=Fact() 
 			     { if (op.kind == TIMES)
 			     		f1 = new ASTMul(f1,f2);
 			     	else f1 = new ASTDiv(f1,f2);
 			   	 }
-			      )* 
+			       )* 
 			   )
 	{ return f1; }
 }

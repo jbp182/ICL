@@ -1,25 +1,32 @@
 package LanguageComponents.Nodes.ImperativeCore;
 
+import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Values.IValue;
+import LanguageComponents.Values.VBool;
 
 //TODO
 public class ASTWhile implements ASTNode {
 
-    private ASTNode left;
-    private ASTNode right;
+    private ASTNode cond;
+    private ASTNode body;
 
-    public ASTWhile(ASTNode left, ASTNode right) {
-        this.left = left;
-        this.right = right;
+    public ASTWhile(ASTNode cond, ASTNode body) {
+        this.cond = cond;
+        this.body = body;
     }
 
     @Override
     public IValue eval(Environment env) {
-        return null;
+    	IValue bool = cond.eval(env);
+    	if (bool instanceof VBool)
+    		while ( ((VBool)bool).isTrue() )
+    			body.eval(env); //nao eh bem isto
+    	
+        throw new TypeError("Conditional expression must return true or false.");
     }
 
     @Override

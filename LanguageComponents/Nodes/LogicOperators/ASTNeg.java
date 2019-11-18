@@ -1,23 +1,28 @@
 package LanguageComponents.Nodes.LogicOperators;
 
+import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Values.IValue;
+import LanguageComponents.Values.VBool;
 
 //TODO
 public class ASTNeg implements ASTNode {
 
-    private ASTNode right;
+    private ASTNode node;
 
-    public ASTNeg(ASTNode right) {
-        this.right = right;
+    public ASTNeg(ASTNode node) {
+        this.node = node;
     }
 
     @Override
     public IValue eval(Environment env) {
-        return null;
+    	IValue bool = node.eval(env);
+    	if (bool instanceof VBool)
+    		return new VBool( !((VBool)bool).isTrue() );
+        throw new TypeError("Conditional expression must return true or false.");
     }
 
     @Override

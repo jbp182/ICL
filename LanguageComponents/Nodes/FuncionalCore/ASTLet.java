@@ -13,9 +13,9 @@ import LanguageComponents.Nodes.ASTNode;
 
 public class ASTLet implements ASTNode {
 	
-	LinkedList<String> ids;
-	LinkedList<ASTNode> inits;
-	ASTNode body;
+	private LinkedList<String> ids;
+	private LinkedList<ASTNode> inits;
+	private ASTNode body;
 	
 	public ASTLet(LinkedList<String> ids, LinkedList<ASTNode> inits, ASTNode body) {
 		this.ids = ids;

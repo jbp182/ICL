@@ -5,6 +5,7 @@ import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Values.IValue;
+import LanguageComponents.Values.VBool;
 
 //TODO
 public class ASTEquals implements ASTNode {
@@ -19,7 +20,8 @@ public class ASTEquals implements ASTNode {
 
     @Override
     public IValue eval(Environment env) {
-        return null;
+    	boolean res = left.eval(env) == right.eval(env);		// implementamos um equals nos no's ??
+    	return new VBool( res );
     }
 
     @Override

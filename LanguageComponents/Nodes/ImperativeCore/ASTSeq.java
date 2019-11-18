@@ -19,6 +19,9 @@ public class ASTSeq implements ASTNode {
 
     @Override
     public IValue eval(Environment env) {
+    	env = env.beginScope();
+    	// TODO
+    	env = env.endScope();
         return null;
     }
 
