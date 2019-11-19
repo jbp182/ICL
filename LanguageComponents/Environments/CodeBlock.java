@@ -117,6 +117,7 @@ public class CodeBlock {
     private static void runProcess(String command) throws Exception {
         Process pro = Runtime.getRuntime().exec(command);
         printLines(pro.getInputStream());
+        printLines(pro.getErrorStream());
         pro.waitFor();
     }
 
