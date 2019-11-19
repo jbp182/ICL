@@ -28,12 +28,13 @@ public class ASTNeg implements ASTNode {
 
     @Override
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
-    	node.compile(env, codeBlock);
         String l1 = IdGenerator.genLabels();
         String l2 = IdGenerator.genLabels();
-    	codeBlock.emit("ifeq "+l1+":");
+        
+    	node.compile(env, codeBlock);
+    	codeBlock.emit("ifeq "+l1);
     	codeBlock.emit("sipush 0");
-    	codeBlock.emit("goto "+l1);
+    	codeBlock.emit("goto "+l2);
     	codeBlock.emit(l1+":");
     	codeBlock.emit("sipush 1");
     	codeBlock.emit(l2 + ":");

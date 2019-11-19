@@ -4,6 +4,7 @@ import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
+import LanguageComponents.Environments.IdGenerator;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VBool;
@@ -37,6 +38,14 @@ public class ASTWhile implements ASTNode {
 
     @Override
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
+    	String l1 = IdGenerator.genLabels();
+    	String l2 = IdGenerator.genLabels();
     	
+    	codeBlock.emit(l1 + ":");
+    	cond.compile(env, codeBlock);
+    	codeBlock.emit("ifeq " + l2);
+    	body.compile(env, codeBlock);
+    	codeBlock.emit("goto " + l1);
+    	codeBlock.emit(l2 + ":");
     }
 }
