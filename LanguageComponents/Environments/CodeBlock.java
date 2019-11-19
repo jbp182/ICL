@@ -86,8 +86,8 @@ public class CodeBlock {
     }
 
     private void createJFileWithException(File f) throws IOException {
-        BufferedReader inInit = new BufferedReader(new InputStreamReader(new FileInputStream(new File("./src/RessourceFiles/init.j"))));
-        BufferedReader inEnd = new BufferedReader(new InputStreamReader(new FileInputStream(new File("./src/RessourceFiles/end.j"))));
+        BufferedReader inInit = new BufferedReader(new InputStreamReader(new FileInputStream(new File("./src/ResourceFiles/init.j"))));
+        BufferedReader inEnd = new BufferedReader(new InputStreamReader(new FileInputStream(new File("./src/ResourceFiles/end.j"))));
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
         //Dump init.j
         String line;
@@ -107,7 +107,7 @@ public class CodeBlock {
     private void compileJ(){
         try {
             for (final File fileEntry : (new File("./target")).listFiles()) {
-                runProcess("java -jar ./src/RessourceFiles/jasmin.jar -d ./target ./target/"+fileEntry.getName());
+                runProcess("java -jar ./src/ResourceFiles/jasmin.jar -d ./target ./target/"+fileEntry.getName());
             }
         } catch (Exception e) {
             e.printStackTrace();
