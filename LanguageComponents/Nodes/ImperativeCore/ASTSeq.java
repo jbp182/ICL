@@ -19,14 +19,15 @@ public class ASTSeq implements ASTNode {
 
     @Override
     public IValue eval(Environment env) {
-    	env = env.beginScope();
-    	// TODO
-    	env = env.endScope();
-        return null;
+        IValue res;
+    	left.eval(env);
+        return right.eval(env);;
     }
 
     @Override
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
-
+        left.compile(env,codeBlock);
+        codeBlock.emit("pop");
+        right.compile(env,codeBlock);
     }
 }
