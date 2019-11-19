@@ -32,6 +32,8 @@ public class ASTAnd implements ASTNode {
 
     @Override
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
-
+    	left.compile(env, codeBlock);
+    	right.compile(env, codeBlock);
+    	codeBlock.emit("iand");
     }
 }

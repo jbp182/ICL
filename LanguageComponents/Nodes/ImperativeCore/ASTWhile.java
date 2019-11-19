@@ -22,15 +22,21 @@ public class ASTWhile implements ASTNode {
     @Override
     public IValue eval(Environment env) {
     	IValue bool = cond.eval(env);
-    	if (bool instanceof VBool)
-    		while ( ((VBool)bool).isTrue() )
+    	if (bool instanceof VBool) {
+        	env = env.beginScope();
+    		while ( ((VBool)bool).isTrue() ) {
     			body.eval(env); //nao eh bem isto
-    	
-        throw new TypeError("Conditional expression must return true or false.");
+    			bool = cond.eval(env);
+    		}
+    		env = env.endScope();
+    		return null;
+    	}
+    	else
+    		throw new TypeError("Conditional expression must return true or false.");
     }
 
     @Override
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
-
+    	
     }
 }

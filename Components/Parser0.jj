@@ -216,7 +216,7 @@ ASTNode Fact() :
   LinkedList<ASTNode> inits;}
 {
     (  n=< Num >   {  t = new ASTNum(Integer.parseInt(n.image)); }
-   | <LPAR> t=Exp() <RPAR>
+   | <LPAR> t=W() <RPAR>
    | < MINUS > t=Fact() { t = new ASTMul(new ASTNum(-1), t); }
    | < PLUS > t=Fact()
    | id=< Id > { t = new ASTId( id.image ); }
@@ -227,6 +227,8 @@ ASTNode Fact() :
    			{ t = new ASTIf( t, init1, init2 ); }
    | < WHILE > t=Em() < DO > body=Em() < END >
    			{ t = new ASTWhile(t,body); }
+   | < NOT > t=Fact()
+   			{  t = new ASTNeg(t); }
    | < LET > id1 = < Id > <EQ > init1=Exp()
    			{	ids = new LinkedList();
    		  		inits = new LinkedList();

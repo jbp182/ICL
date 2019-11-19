@@ -26,6 +26,14 @@ public class ASTEquals implements ASTNode {
 
     @Override
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
-
+    	left.compile(env, codeBlock);
+    	right.compile(env, codeBlock);
+    	codeBlock.emit("isub");
+    	codeBlock.emit("ifeq L1");
+    	codeBlock.emit("sipush 0");
+    	codeBlock.emit("goto L2");
+    	codeBlock.emit("L1:");
+    	codeBlock.emit("sipush 1");
+    	codeBlock.emit("L2:");
     }
 }

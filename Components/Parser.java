@@ -257,7 +257,7 @@ public class Parser implements ParserConstants {
       break;
     case LPAR:
       jj_consume_token(LPAR);
-      t = Exp();
+      t = W();
       jj_consume_token(RPAR);
       break;
     case MINUS:
@@ -304,6 +304,11 @@ public class Parser implements ParserConstants {
       body = Em();
       jj_consume_token(END);
                           t = new ASTWhile(t,body);
+      break;
+    case NOT:
+      jj_consume_token(NOT);
+      t = Fact();
+                           t = new ASTNeg(t);
       break;
     case LET:
       jj_consume_token(LET);
@@ -361,7 +366,7 @@ public class Parser implements ParserConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x4000000,0xc0000,0xc0000,0xf20000,0xf20000,0x60,0x60,0x180,0x180,0x8000000,0x8000,0x32001270,};
+      jj_la1_0 = new int[] {0x4000000,0xc0000,0xc0000,0xf20000,0xf20000,0x60,0x60,0x180,0x180,0x8000000,0x8000,0x32011270,};
    }
    private static void jj_la1_init_1() {
       jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xd,};
