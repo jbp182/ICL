@@ -285,7 +285,7 @@ public class Parser implements ParserConstants {
     case DESREF:
       jj_consume_token(DESREF);
       t = Fact();
-                           t = new ASTDesRef( t );
+                           t = new ASTDeref( t );
       break;
     case IF:
       jj_consume_token(IF);

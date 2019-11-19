@@ -24,13 +24,16 @@ public class ASTWhile implements ASTNode {
     public IValue eval(Environment env) {
     	IValue bool = cond.eval(env);
     	if (bool instanceof VBool) {
+        	IValue res = null;
         	env = env.beginScope();
+        	
     		while ( ((VBool)bool).isTrue() ) {
-    			body.eval(env); //nao eh bem isto
+    			res = body.eval(env);
     			bool = cond.eval(env);
     		}
+    		
     		env = env.endScope();
-    		return null;
+    		return res;
     	}
     	else
     		throw new TypeError("Conditional expression must return true or false.");

@@ -7,11 +7,11 @@ import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Values.IValue;
 
 //TODO
-public class ASTDesRef implements ASTNode {
+public class ASTDeref implements ASTNode {
 
     private ASTNode right;
 
-    public ASTDesRef(ASTNode right) {
+    public ASTDeref(ASTNode right) {
         this.right = right;
     }
 
