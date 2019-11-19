@@ -37,7 +37,7 @@ public class ASTLower implements ASTNode {
     @Override
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
     	left.compile(env, codeBlock);
-    	right.compile(env, codeBlock)
+    	right.compile(env, codeBlock);
 
 		String l1 = IdGenerator.genLabels();
 		String l2 = IdGenerator.genLabels();;
