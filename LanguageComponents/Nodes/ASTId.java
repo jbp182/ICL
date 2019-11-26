@@ -18,6 +18,10 @@ public class ASTId implements ASTNode {
 		return env.find(id);
 	}
 
+	public String toString(){
+		return id;
+	}
+
 	@Override
 	public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
 		CompilerPair pair = env.find(id);

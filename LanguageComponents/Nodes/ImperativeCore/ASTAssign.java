@@ -4,10 +4,11 @@ import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
+import LanguageComponents.Nodes.ASTId;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Values.IValue;
-import LanguageComponents.Values.VBool;
-import LanguageComponents.Values.VStr;
+import LanguageComponents.Values.VRef;
+
 
 //TODO
 public class ASTAssign implements ASTNode {
@@ -22,11 +23,13 @@ public class ASTAssign implements ASTNode {
 
     @Override
     public IValue eval(Environment env) {
-        IValue id = left.eval(env);
+        IValue ref = left.eval(env);
 
-        if ((id instanceof VStr)) {
-            env.assoc(id.toString(),right.eval(env));
-            return null; //TODO caires
+        if (ref instanceof VRef) {
+            IValue val = right.eval(env);
+            ((VRef) ref).set(val);
+
+            return val;
         }
         throw new TypeError("Assign should have and Id");
     }

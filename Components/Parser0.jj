@@ -222,7 +222,7 @@ ASTNode Fact() :
    | id=< Id > { t = new ASTId( id.image ); }
    | n =< BOOL > { t = new ASTBool( n.image ); }
    | < NEW > t=Fact() { t = new ASTNewRef( t ); }
-   | < DESREF > t=Fact() { t = new ASTDesRef( t ); }
+   | < DESREF > t=Fact() { t = new ASTDeref( t ); }
    | < IF > t=Em() < THEN > init1=Em() < ELSE > init2=Em() < END >
    			{ t = new ASTIf( t, init1, init2 ); }
    | < WHILE > t=Em() < DO > body=Em() < END >

@@ -5,6 +5,7 @@ import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Values.IValue;
+import LanguageComponents.Values.VRef;
 
 //TODO
 public class ASTNewRef implements ASTNode {
@@ -17,7 +18,8 @@ public class ASTNewRef implements ASTNode {
 
     @Override
     public IValue eval(Environment env) {
-        return null;
+        IValue val = right.eval(env);
+        return new VRef(val);
     }
 
     @Override
