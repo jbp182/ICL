@@ -9,6 +9,11 @@ public class CodeBlock {
     public CodeBlock() {
         this.builder = new StringBuilder();
         createTargetDir();
+        try {
+            genClassForRef();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void emit(String instruction){
@@ -48,7 +53,7 @@ public class CodeBlock {
             out.write(".field public sl L"+env.getAncestor() + ";\n");
 
         for(String id : ids) {
-            out.write(".field public " +id+" I\n");
+            out.write(".field public " +id+" Ljava/lang/Object\n");
         }
         out.write(".method public <init>()V\n");
         out.write("\taload_0\n");
@@ -60,6 +65,34 @@ public class CodeBlock {
 
         System.out.println("Generated: " + f.getPath());
     }
+
+    private void genClassForRef() throws IOException {
+        File f = new File("./target/ref_int.j");
+        f.delete();
+        f.createNewFile();
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
+        out.flush();
+
+
+        out.write(".class ref_int \n");
+        out.write(".super java/lang/Object\n");
+
+        out.write(".field public v I\n");
+
+
+        out.write(".method public <init>()V\n");
+        out.write("\taload_0\n");
+        out.write("\tinvokenonvirtual java/lang/Object/<init>()V\n");
+        out.write("\treturn\n");
+        out.write(".end method\n");
+        out.flush();
+        out.close();
+
+        System.out.println("Generated: " + f.getPath());
+    }
+
+
+
 
 
     public void dump(String fileName) throws IOException {

@@ -219,7 +219,6 @@ ASTNode Fact() :
    | <LPAR> t=W() <RPAR>
    | < MINUS > t=Fact() { t = new ASTMul(new ASTNum(-1), t); }
    | < PLUS > t=Fact()
-   | id=< Id > { t = new ASTId( id.image ); }
    | n =< BOOL > { t = new ASTBool( n.image ); }
    | < NEW > t=Fact() { t = new ASTNewRef( t ); }
    | < DESREF > t=Fact() { t = new ASTDeref( t ); }
@@ -239,7 +238,9 @@ ASTNode Fact() :
    		< IN > body=Exp() < END >
    		
    		{ t = new ASTLet(ids, inits, body); }
+   	| id=< Id > { t = new ASTId( id.image ); }
    )
+
    { return t; }
 }
 

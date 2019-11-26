@@ -36,6 +36,10 @@ public class ASTAssign implements ASTNode {
 
     @Override
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
-            //TODO
+        left.compile(env,codeBlock);
+        codeBlock.emit("checkcast ref_int");
+        right.compile(env,codeBlock);
+        codeBlock.emit("putfield ref_int/v I");
     }
+
 }

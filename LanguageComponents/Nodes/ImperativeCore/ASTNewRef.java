@@ -24,6 +24,12 @@ public class ASTNewRef implements ASTNode {
 
     @Override
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
-
+        codeBlock.emit("new ref_int");
+        codeBlock.emit("dup");
+        codeBlock.emit("invokespecial ref_int/<init>()V");
+        codeBlock.emit("dup");
+        right.compile(env,codeBlock);
+        codeBlock.emit("putfield ref_int/v I");
     }
+
 }

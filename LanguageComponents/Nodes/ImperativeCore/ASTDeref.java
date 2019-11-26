@@ -29,6 +29,8 @@ public class ASTDeref implements ASTNode {
 
     @Override
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
-
+        right.compile(env,codeBlock);
+        codeBlock.emit("checkcast ref_int");
+        codeBlock.emit("getfield ref_int/v I");
     }
 }
