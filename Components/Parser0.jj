@@ -148,24 +148,9 @@ ASTNode E():
 { Token op;
   ASTNode t1, t2; }
 {
-  	t1 = EA() ( ( op=<AND> | op=<OR>  | op=< ISEQ > | op=< GE > | op=< LE >
-  					| op=< GT > | op=< LT > ) t2=EA()
-  				{ if (op.kind == ISEQ)
-  						t1 = new ASTEquals(t1,t2);
-				  else if (op.kind == GT)
-				  		t1 = new ASTGreater(t1,t2);
-			  	  else if (op.kind == LT)
-				  		t1 = new ASTLower(t1,t2);
-		  		  else if (op.kind == GE)
-				  		t1 = new ASTGreaterEqual(t1,t2);
-				  else if (op.kind == LE)
-				  		t1 = new ASTGreater(t1,t2);
-				  else if (op.kind == AND)
-                        t1 = new ASTAnd(t1,t2);
-                  else
-                        t1 = new ASTOr(t1,t2);
-  			    }
-  			  )*
+  	t1 = EA() ( op=< ISEQ > t2=EA()
+  				{ t1 = new ASTEquals(t1,t2); }
+  			  )?
     { return t1; }
 }
     
@@ -175,10 +160,12 @@ ASTNode EA() :
 { Token op;
   ASTNode t1, t2; }
 {
-     t1=T() ( ( op=<PLUS> | op=<MINUS> ) t2=EA()
+     t1=T() ( ( op=<PLUS> | op=<MINUS> | op=<AND> ) t2=EA()
                  { if (op.kind == PLUS) 
                          t1 = new ASTPlus(t1,t2);
-                   else  t1 = new ASTSub(t1,t2);
+                   else if (op.kind == MINUS)
+                   		 t1 = new ASTSub(t1,t2);
+                   else t1 = new ASTAnd(t1,t2);
                  } 
                   ) *
      { return t1; } 
@@ -189,13 +176,26 @@ ASTNode T() :
   ASTNode f1, f2;}
 {
      f1=F() ( < ASSIGN > f2=E() { f1 = new ASTAssign(f1,f2); }
-     	        | ( ( op=<TIMES> | op=<DIV> ) f2=F()
+    			| ( ( op=<GE> | op=<LE> | op=<GT> | op=<LT> ) f2=F()
+	   				{ if (op.kind == GE)
+	   						f1 = new ASTGreaterEqual(f1,f2);
+	   				  else if (op.kind == LE)
+	   				  		f1 = new ASTLowerEqual(f1,f2);
+	   				  else if (op.kind == GT)
+	   						f1 = new ASTGreater(f1,f2);
+	   				  else if (op.kind == LT)
+	   				  		f1 = new ASTLower(f1,f2);
+	   				}
+				   )
+     	        | ( ( op=<TIMES> | op=<DIV> | op=<OR> ) f2=T()
 			     { if (op.kind == TIMES)
 			     		f1 = new ASTMul(f1,f2);
-			     	else f1 = new ASTDiv(f1,f2);
+			     	else if (op.kind == DIV)
+			     		f1 = new ASTDiv(f1,f2);
+			     	else f1 = new ASTOr(f1,f2);
 			   	 }
-			       )* 
-			   )
+			       )*
+			     )
 	{ return f1; }
 }
 
