@@ -53,7 +53,12 @@ public class CodeBlock {
             out.write(".field public sl L"+env.getAncestor() + ";\n");
 
         for(String id : ids) {
-            out.write(".field public " +id+" Ljava/lang/Object\n");
+            if(isRef(id)){
+                out.write(".field public " +id+" Lref_int;\n");
+            }else{
+                out.write(".field public " +id+" I\n");
+            }
+
         }
         out.write(".method public <init>()V\n");
         out.write("\taload_0\n");
@@ -66,6 +71,10 @@ public class CodeBlock {
         System.out.println("Generated: " + f.getPath());
     }
 
+    private boolean isRef(String id){
+        return id.charAt(0) == 'r';
+    }
+
     private void genClassForRef() throws IOException {
         File f = new File("./target/ref_int.j");
         f.delete();
@@ -74,7 +83,7 @@ public class CodeBlock {
         out.flush();
 
 
-        out.write(".class ref_int \n");
+        out.write(".class ref_int\n");
         out.write(".super java/lang/Object\n");
 
         out.write(".field public v I\n");
