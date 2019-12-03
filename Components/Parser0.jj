@@ -188,7 +188,7 @@ ASTNode T() :
 { Token op;
   ASTNode f1, f2;}
 {
-     f1=F() ( < ASSIGN > f2=F() { f1 = new ASTAssign(f1,f2); }
+     f1=F() ( < ASSIGN > f2=E() { f1 = new ASTAssign(f1,f2); }
      	        | ( ( op=<TIMES> | op=<DIV> ) f2=F()
 			     { if (op.kind == TIMES)
 			     		f1 = new ASTMul(f1,f2);

@@ -20,6 +20,7 @@ public class ASTWhile implements ASTNode {
         this.body = body;
     }
 
+    //TODO while conveção devolve falso
     @Override
     public IValue eval(Environment env) {
     	IValue bool = cond.eval(env);
@@ -48,7 +49,9 @@ public class ASTWhile implements ASTNode {
     	cond.compile(env, codeBlock);
     	codeBlock.emit("ifeq " + l2);
     	body.compile(env, codeBlock);
+    	codeBlock.emit("pop");
     	codeBlock.emit("goto " + l1);
     	codeBlock.emit(l2 + ":");
+    	codeBlock.emit("sipush 0");
     }
 }
