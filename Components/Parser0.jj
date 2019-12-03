@@ -130,39 +130,26 @@ TOKEN :
 ASTNode Start():
 { ASTNode t; }
 {
-   ( t = Em() <EL> )
+   ( t = EM() <EL> )
    { return t; }
 }
 
-ASTNode Em():
+ASTNode EM():
 { Token op;
   ASTNode t1, t2; }
 {
-  t1 = W() ( ( op=< SEQ >) t2=W()
+  t1 = E() ( ( op=< SEQ >) t2=EM()
   				{ t1 = new ASTSeq(t1,t2); }
 			)*
 	{ return t1; }
 }
 
-ASTNode W():
+ASTNode E():
 { Token op;
   ASTNode t1, t2; }
 {
-  	t1 = ExpLine() ( ( op=<AND> | op=<OR> ) t2=ExpLine()
-  					{ if (op.kind == AND)
-  						   t1 = new ASTAnd(t1,t2);
-  					  else t1 = new ASTOr(t1,t2);
-  					}
-  				 )?
-	 { return t1; }
-}
-
-ASTNode ExpLine():
-{ Token op;
-  ASTNode t1, t2; }
-{
-  	t1 = Exp() ( ( op=< ISEQ > | op=< GE > | op=< LE >
-  					| op=< GT > | op=< LT > ) t2=Exp()
+  	t1 = EA() ( ( op=<AND> | op=<OR>  | op=< ISEQ > | op=< GE > | op=< LE >
+  					| op=< GT > | op=< LT > ) t2=EA()
   				{ if (op.kind == ISEQ)
   						t1 = new ASTEquals(t1,t2);
 				  else if (op.kind == GT)
@@ -173,6 +160,10 @@ ASTNode ExpLine():
 				  		t1 = new ASTGreaterEqual(t1,t2);
 				  else if (op.kind == LE)
 				  		t1 = new ASTGreater(t1,t2);
+				  else if (op.kind == AND)
+                        t1 = new ASTAnd(t1,t2);
+                  else
+                        t1 = new ASTOr(t1,t2);
   			    }
   			  )*
     { return t1; }
@@ -180,11 +171,11 @@ ASTNode ExpLine():
     
   
 
-ASTNode Exp() :
+ASTNode EA() :
 { Token op;
   ASTNode t1, t2; }
 {
-     t1=Term() ( ( op=<PLUS> | op=<MINUS> ) t2=Term() 
+     t1=T() ( ( op=<PLUS> | op=<MINUS> ) t2=EA()
                  { if (op.kind == PLUS) 
                          t1 = new ASTPlus(t1,t2);
                    else  t1 = new ASTSub(t1,t2);
@@ -193,12 +184,12 @@ ASTNode Exp() :
      { return t1; } 
 }
 
-ASTNode Term() :
+ASTNode T() :
 { Token op;
   ASTNode f1, f2;}
 {
-     f1=Fact() ( < ASSIGN > f2=W() { f1 = new ASTAssign(f1,f2); }
-     	        | ( ( op=<TIMES> | op=<DIV> ) f2=Fact() 
+     f1=F() ( < ASSIGN > f2=F() { f1 = new ASTAssign(f1,f2); }
+     	        | ( ( op=<TIMES> | op=<DIV> ) f2=F()
 			     { if (op.kind == TIMES)
 			     		f1 = new ASTMul(f1,f2);
 			     	else f1 = new ASTDiv(f1,f2);
@@ -209,33 +200,33 @@ ASTNode Term() :
 }
 
 
-ASTNode Fact() :
+ASTNode F() :
 { Token n, id, id1, id2; 
   ASTNode t, init1, init2, body;
   LinkedList<String> ids;
   LinkedList<ASTNode> inits;}
 {
     (  n=< Num >   {  t = new ASTNum(Integer.parseInt(n.image)); }
-   | <LPAR> t=W() <RPAR>
-   | < MINUS > t=Fact() { t = new ASTMul(new ASTNum(-1), t); }
-   | < PLUS > t=Fact()
+   | <LPAR> t=EM() <RPAR>
+   | < MINUS > t=F() { t = new ASTMul(new ASTNum(-1), t); }
+   | < PLUS > t=F()
    | n =< BOOL > { t = new ASTBool( n.image ); }
-   | < NEW > t=Fact() { t = new ASTNewRef( t ); }
-   | < DESREF > t=Fact() { t = new ASTDeref( t ); }
-   | < IF > t=Em() < THEN > init1=Em() < ELSE > init2=Em() < END >
+   | < NEW > t=F() { t = new ASTNewRef( t ); }
+   | < DESREF > t=F() { t = new ASTDeref( t ); }
+   | < IF > t=EM() < THEN > init1=EM() < ELSE > init2=EM() < END >
    			{ t = new ASTIf( t, init1, init2 ); }
-   | < WHILE > t=Em() < DO > body=Em() < END >
+   | < WHILE > t=EM() < DO > body=EM() < END >
    			{ t = new ASTWhile(t,body); }
-   | < NOT > t=Fact()
+   | < NOT > t=F()
    			{  t = new ASTNeg(t); }
-   | < LET > id1 = < Id > <EQ > init1=Exp()
+   | < LET > id1 = < Id > <EQ > init1=EM()
    			{	ids = new LinkedList();
    		  		inits = new LinkedList();
    		  		ids.add(id1.image); inits.add(init1); }
-   		( < COMMA > id2 = < Id > <EQ > init2=Exp()
+   		( < COMMA > id2 = < Id > <EQ > init2=EM()
    			{ ids.add(id2.image); inits.add(init2); }
    		)*
-   		< IN > body=Exp() < END >
+   		< IN > body=EM() < END >
    		
    		{ t = new ASTLet(ids, inits, body); }
    	| id=< Id > { t = new ASTId( id.image ); }
