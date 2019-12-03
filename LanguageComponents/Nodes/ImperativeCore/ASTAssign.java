@@ -38,8 +38,10 @@ public class ASTAssign implements ASTNode {
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
         left.compile(env,codeBlock);
         codeBlock.emit("checkcast ref_int");
+        codeBlock.emit("dup");
         right.compile(env,codeBlock);
         codeBlock.emit("putfield ref_int/v I");
+        codeBlock.emit("getfield ref_int/v I");
     }
 
 }

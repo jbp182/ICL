@@ -35,10 +35,19 @@ public class ASTId implements ASTNode {
 			imitGetField(env,codeBlock);
 			tmp = tmp.getAncestor();
 		}
-		codeBlock.emit("getfield "+pair.frameId+"/"+pair.variableId+" I");
+
+		if(isRef(pair.variableId)) {
+			codeBlock.emit("getfield " + pair.frameId + "/" + pair.variableId + " Lref_int;");
+		}
+		else
+			codeBlock.emit("getfield "+pair.frameId+"/"+pair.variableId+" I");
 	}
 
 	private void imitGetField(CompilerEnvironment env, CodeBlock codeBlock){
 		codeBlock.emit("getfield "+env+"/sl L"+env.getAncestor()+";");
+	}
+
+	private boolean isRef(String id){
+		return id.charAt(0) == 'r';
 	}
 }

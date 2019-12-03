@@ -1,5 +1,6 @@
 package LanguageComponents.Nodes.FuncionalCore;
 
+import LanguageComponents.Nodes.ImperativeCore.ASTNewRef;
 import LanguageComponents.Values.IValue;
 
 import java.util.LinkedList;
@@ -47,24 +48,27 @@ public class ASTLet implements ASTNode {
 		env = env.endScope(codeBlock);
 	}
 
-
-//	private void genStoreValues(CodeBlock codeBlock,CompilerEnvironment env) {
-//		codeBlock.emit("aload 4");
-//		node.compile(env.getAncestor(),codeBlock);
-//		env.assoc(ids, IdGenerator.genVariableName());
-//		codeBlock.emit("putfield "+env+"/"+env.find(ids).variableId+" I");
-//	}
-	
 	private void genStoreValues(CodeBlock codeBlock,CompilerEnvironment env) {
 		while( ids.size() > 0 && inits.size() > 0 ) {
 			codeBlock.emit("aload 4");
-			inits.poll().compile(env.getAncestor(), codeBlock);
+			ASTNode node = inits.poll();
 			String id = ids.poll();
-			String compileId = IdGenerator.genVariableName();
+			node.compile(env.getAncestor(), codeBlock);
+
+			String compileId;
+			if(isRef(node)) {
+				compileId =  IdGenerator.genRefName();
+				codeBlock.emit("putfield " + env + "/" +compileId + " Lref_int;");
+			}else{
+				compileId =  IdGenerator.genVariableName();
+				codeBlock.emit("putfield " + env + "/" + compileId + " I");
+			}
 			env.assoc(id, compileId);
-			codeBlock.emit("putfield " + env + "/" + compileId + " I");
 		}
 	}
 
+	private boolean isRef(ASTNode node){
+		return node instanceof ASTNewRef;
+	}
 
 }
