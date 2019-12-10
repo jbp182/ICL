@@ -22,7 +22,7 @@ public class ASTFun implements ASTNode {
     }
 
     @Override
-    public IValue eval(InterpreterEnvironment env) {
+    public IValue eval(InterpreterEnvironment<IValue> env) {
        return new VClosure(param,body,env);
     }
 

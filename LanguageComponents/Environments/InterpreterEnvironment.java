@@ -4,21 +4,20 @@ import java.util.Map;
 
 import Exceptions.IdAlreadyExistsException;
 import Exceptions.NoSuchIdException;
-import LanguageComponents.Values.IValue;
 
 
-public class InterpreterEnvironment {
+public class InterpreterEnvironment<E> {
 
-    InterpreterEnvironment ancestor;
-    Map<String,IValue> envMap;
+    InterpreterEnvironment<E> ancestor;
+    Map<String,E> envMap;
 
-    public InterpreterEnvironment(InterpreterEnvironment env) {
+    public InterpreterEnvironment(InterpreterEnvironment<E> env) {
         this.ancestor = env;
-        envMap = new HashMap<String, IValue>();
+        envMap = new HashMap<String, E>();
     }
 
-    public IValue find(String id){
-        IValue val = envMap.get(id);
+    public E find(String id){
+        E val = envMap.get(id);
         
         if(val == null && ancestor != null)
             val = ancestor.find(id);
@@ -29,16 +28,16 @@ public class InterpreterEnvironment {
         return val;
     }
     
-    public void assoc(String id, IValue val){
+    public void assoc(String id, E val){
     	if (envMap.putIfAbsent(id, val) != null)
     			throw new IdAlreadyExistsException("Error: Id " + id + " already exists.");
     }
     
-    public InterpreterEnvironment beginScope(){
-        return new InterpreterEnvironment(this);
+    public InterpreterEnvironment<E> beginScope(){
+        return new InterpreterEnvironment<E>(this);
     }
     
-    public InterpreterEnvironment endScope(){
+    public InterpreterEnvironment<E> endScope(){
         return ancestor;
     }
 

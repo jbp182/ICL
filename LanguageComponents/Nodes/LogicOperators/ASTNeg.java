@@ -6,6 +6,8 @@ import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.InterpreterEnvironment;
 import LanguageComponents.Environments.IdGenerator;
 import LanguageComponents.Nodes.ASTNode;
+import LanguageComponents.Types.ASTBoolType;
+import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VBool;
 
@@ -13,13 +15,15 @@ import LanguageComponents.Values.VBool;
 public class ASTNeg implements ASTNode {
 
     private ASTNode node;
+    private ASTType type;
 
     public ASTNeg(ASTNode node) {
         this.node = node;
+        this.type = null;
     }
 
     @Override
-    public IValue eval(InterpreterEnvironment env) {
+    public IValue eval(InterpreterEnvironment<IValue> env) {
     	IValue bool = node.eval(env);
     	if (bool instanceof VBool)
     		return new VBool( !((VBool)bool).isTrue() );
@@ -39,4 +43,12 @@ public class ASTNeg implements ASTNode {
     	codeBlock.emit("sipush 1");
     	codeBlock.emit(l2 + ":");
     }
+
+	@Override
+	public ASTType typecheck(InterpreterEnvironment<ASTType> env) throws TypeError {
+		type = node.typecheck(env);
+		if (type instanceof ASTBoolType)
+			return ASTBoolType.getInstance();
+		throw new TypeError("Type mismatch. Expected boolean.");
+	}
 }

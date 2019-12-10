@@ -5,22 +5,27 @@ import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.InterpreterEnvironment;
 import LanguageComponents.Nodes.ASTNode;
+import LanguageComponents.Types.ASTBoolType;
+import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VBool;
 
-//TODO
 public class ASTOr implements ASTNode {
 
     private ASTNode left;
     private ASTNode right;
+    private ASTType leftType;
+    private ASTType rightType;
 
     public ASTOr(ASTNode left, ASTNode right) {
         this.left = left;
         this.right = right;
+        this.leftType = null;
+        this.rightType = null;
     }
 
     @Override
-    public IValue eval(InterpreterEnvironment env) {
+    public IValue eval(InterpreterEnvironment<IValue> env) {
     	IValue bool1 = left.eval(env);
     	if (bool1 instanceof VBool) {
     		IValue bool2 = right.eval(env);
@@ -38,4 +43,13 @@ public class ASTOr implements ASTNode {
     	right.compile(env, codeBlock);
     	codeBlock.emit("ior");
     }
+
+	@Override
+	public ASTType typecheck(InterpreterEnvironment<ASTType> env) throws TypeError {
+		leftType = left.typecheck(env);
+		rightType = right.typecheck(env);
+		if (leftType instanceof ASTBoolType && rightType instanceof ASTBoolType)
+			return ASTBoolType.getInstance();
+		throw new TypeError("type mismatch. expected boolean.");
+	}
 }

@@ -17,7 +17,7 @@ public class ASTNewRef implements ASTNode {
     }
 
     @Override
-    public IValue eval(InterpreterEnvironment env) {
+    public IValue eval(InterpreterEnvironment<IValue> env) {
         IValue val = right.eval(env);
         return new VRef(val);
     }

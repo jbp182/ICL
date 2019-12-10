@@ -5,7 +5,7 @@ PARSER_BEGIN(Parser)
 package Components;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.Environment;
+import LanguageComponents.Environments.InterpreterEnvironment;
 import LanguageComponents.Nodes.*;
 import LanguageComponents.Nodes.ArithmeticOperators.*;
 import LanguageComponents.Nodes.FuncionalCore.*;
@@ -32,7 +32,7 @@ public class Parser {
     while (true) {
         try {
         exp = parser.Start();
-        exp.eval(new Environment(null)).show();
+        exp.eval(new InterpreterEnvironment(null)).show();
         } catch (Exception e) {
           System.out.println ("Syntax Error!\n" + e.getMessage());
           parser.ReInit(System.in);
@@ -123,6 +123,12 @@ TOKEN :
   < DO: "do" >
   |
   < BOOL: ("true"|"false") >
+  |
+  < FUN: "fun" >
+  |
+  < IS: "->" >
+  |
+  < COLON: ":" >
   | 
   < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
 }
@@ -173,9 +179,13 @@ ASTNode EA() :
 
 ASTNode T() :
 { Token op;
-  ASTNode f1, f2;}
+  ASTNode f1, f2;
+  LinkedList al;}
 {
-     f1=F() ( < ASSIGN > f2=E() { f1 = new ASTAssign(f1,f2); }
+     f1=F() ( ( < LPAR > al=AL() < RPAR >
+				{ f1 = new ASTApply(f1, al); }
+     			)+
+       			| < ASSIGN > f2=E() { f1 = new ASTAssign(f1,f2); }
     			| ( ( op=<GE> | op=<LE> | op=<GT> | op=<LT> ) f2=F()
 	   				{ if (op.kind == GE)
 	   						f1 = new ASTGreaterEqual(f1,f2);
@@ -195,10 +205,34 @@ ASTNode T() :
 			     	else f1 = new ASTOr(f1,f2);
 			   	 }
 			       )*
-			     )
+			   )
 	{ return f1; }
 }
 
+LinkedList AL():
+{ ASTNode n;
+  LinkedList<ASTNode> args = new LinkedList(); }
+{
+  ( n=EM()
+  	{ args.add(n); }
+  	( < COMMA > n = EM()
+  		{ args.add(n); }
+ 	)* )?
+ { return args; }
+}
+
+
+LinkedList PL():
+{ Token id, type;
+  LinkedList<ASTNode> ids_types = new LinkedList(); }
+{
+  (id=<Id><COLON > type=<Id>
+  		{ ids_types.add( new ASTId(id.image, type.image) ); }
+   	 ( id=< Id ><COLON > type=< Id > 
+  		{ ids_types.add( new ASTId(id.image, type.image) ); }
+  	 )* )?
+  	 { return ids_types; }
+}
 
 ASTNode F() :
 { Token n, id, id1, id2; 
@@ -229,6 +263,8 @@ ASTNode F() :
    		< IN > body=EM() < END >
    		
    		{ t = new ASTLet(ids, inits, body); }
+    | <FUN> inits=PL() <IS> body=EM() <END>
+    	{ t = new ASTFun(inits, body); }
    	| id=< Id > { t = new ASTId( id.image ); }
    )
 

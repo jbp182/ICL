@@ -21,7 +21,7 @@ public class ASTAssign implements ASTNode {
     }
 
     @Override
-    public IValue eval(InterpreterEnvironment env) {
+    public IValue eval(InterpreterEnvironment<IValue> env) {
         IValue ref = left.eval(env);
 
         if (ref instanceof VRef) {

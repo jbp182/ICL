@@ -17,7 +17,7 @@ public class ASTPlus implements ASTNode {
 		right = v2;
 	}
 	
-	public IValue eval(InterpreterEnvironment env) {
+	public IValue eval(InterpreterEnvironment<IValue> env) {
 		IValue v1 = left.eval(env);
 		if (v1 instanceof VInt) {
 			IValue v2 = right.eval(env);

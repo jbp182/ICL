@@ -18,7 +18,7 @@ public class ASTDeref implements ASTNode {
     }
 
     @Override
-    public IValue eval(InterpreterEnvironment env) {
+    public IValue eval(InterpreterEnvironment<IValue> env) {
         IValue val = right.eval(env);
 
         if(val instanceof VRef){

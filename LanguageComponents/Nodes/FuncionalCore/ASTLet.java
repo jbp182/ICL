@@ -25,9 +25,9 @@ public class ASTLet implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(InterpreterEnvironment env) {
+	public IValue eval(InterpreterEnvironment<IValue> env) {
 
-		InterpreterEnvironment newEnv = env.beginScope();
+		InterpreterEnvironment<IValue> newEnv = env.beginScope();
 		
 		while (ids.size() > 0 && inits.size() > 0) {
 			IValue v1 = inits.poll().eval(env);

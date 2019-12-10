@@ -74,7 +74,13 @@ public interface ParserConstants {
   /** RegularExpression Id. */
   int BOOL = 34;
   /** RegularExpression Id. */
-  int Id = 35;
+  int FUN = 35;
+  /** RegularExpression Id. */
+  int IS = 36;
+  /** RegularExpression Id. */
+  int COLON = 37;
+  /** RegularExpression Id. */
+  int Id = 38;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -116,6 +122,9 @@ public interface ParserConstants {
     "\"while\"",
     "\"do\"",
     "<BOOL>",
+    "\"fun\"",
+    "\"->\"",
+    "\":\"",
     "<Id>",
   };
 

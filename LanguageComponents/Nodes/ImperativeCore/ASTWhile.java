@@ -22,7 +22,7 @@ public class ASTWhile implements ASTNode {
 
     //TODO while conveção devolve falso
     @Override
-    public IValue eval(InterpreterEnvironment env) {
+    public IValue eval(InterpreterEnvironment<IValue> env) {
     	IValue bool = cond.eval(env);
     	if (bool instanceof VBool) {
         	IValue res = null;

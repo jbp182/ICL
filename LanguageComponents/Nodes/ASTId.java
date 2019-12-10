@@ -1,25 +1,37 @@
 package LanguageComponents.Nodes;
 import LanguageComponents.Values.IValue;
+import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.CompilerPair;
 import LanguageComponents.Environments.InterpreterEnvironment;
+import LanguageComponents.Types.ASTType;
 
 public class ASTId implements ASTNode {
 	
-	String id;
+	private String id;
+	private ASTType type;
 	
 	public ASTId(String id) {
 		this.id = id;
 	}
+	
+	public ASTId(String id, String type) {
+		this.id = id;
+		this.type = ASTType.build(type);
+	}
 
 	@Override
-	public IValue eval(InterpreterEnvironment env) {
+	public IValue eval(InterpreterEnvironment<IValue> env) {
 		return env.find(id);
 	}
 
 	public String toString(){
 		return id;
+	}
+	
+	public ASTType getType() {
+		return type;
 	}
 
 	@Override
@@ -49,5 +61,10 @@ public class ASTId implements ASTNode {
 
 	private boolean isRef(String id){
 		return id.charAt(0) == 'r';
+	}
+
+	@Override
+	public ASTType typecheck(InterpreterEnvironment<ASTType> env) throws TypeError {
+		return type;
 	}
 }
