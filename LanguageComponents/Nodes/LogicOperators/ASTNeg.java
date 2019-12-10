@@ -3,7 +3,7 @@ package LanguageComponents.Nodes.LogicOperators;
 import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.Environment;
+import LanguageComponents.Environments.InterpreterEnvironment;
 import LanguageComponents.Environments.IdGenerator;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Values.IValue;
@@ -19,7 +19,7 @@ public class ASTNeg implements ASTNode {
     }
 
     @Override
-    public IValue eval(Environment env) {
+    public IValue eval(InterpreterEnvironment env) {
     	IValue bool = node.eval(env);
     	if (bool instanceof VBool)
     		return new VBool( !((VBool)bool).isTrue() );

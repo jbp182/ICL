@@ -3,8 +3,7 @@ package LanguageComponents.Nodes.ImperativeCore;
 import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.Environment;
-import LanguageComponents.Nodes.ASTId;
+import LanguageComponents.Environments.InterpreterEnvironment;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VRef;
@@ -22,7 +21,7 @@ public class ASTAssign implements ASTNode {
     }
 
     @Override
-    public IValue eval(Environment env) {
+    public IValue eval(InterpreterEnvironment env) {
         IValue ref = left.eval(env);
 
         if (ref instanceof VRef) {

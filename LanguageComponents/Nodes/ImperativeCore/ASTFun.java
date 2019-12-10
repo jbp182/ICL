@@ -5,29 +5,30 @@ import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.InterpreterEnvironment;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Values.IValue;
+import LanguageComponents.Values.VClosure;
+
+import java.util.List;
+
 
 //TODO
-public class ASTSeq implements ASTNode {
+public class ASTFun implements ASTNode {
 
-    private ASTNode left;
-    private ASTNode right;
-
-    public ASTSeq(ASTNode left, ASTNode right) {
-        this.left = left;
-        this.right = right;
+    private List<ASTNode> param;
+    private ASTNode body;
+    
+    public ASTFun(List<ASTNode> left, ASTNode body) {
+        this.param = left;
+        this.body = body;
     }
 
     @Override
     public IValue eval(InterpreterEnvironment env) {
-        IValue res;
-    	left.eval(env);
-        return right.eval(env);
+       return new VClosure(param,body,env);
     }
 
     @Override
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
-        left.compile(env,codeBlock);
-        codeBlock.emit("pop");
-        right.compile(env,codeBlock);
+
     }
+
 }

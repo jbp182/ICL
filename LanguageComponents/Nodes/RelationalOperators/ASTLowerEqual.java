@@ -3,7 +3,7 @@ package LanguageComponents.Nodes.RelationalOperators;
 import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.Environment;
+import LanguageComponents.Environments.InterpreterEnvironment;
 import LanguageComponents.Environments.IdGenerator;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Values.IValue;
@@ -22,7 +22,7 @@ public class ASTLowerEqual implements ASTNode {
     }
 
     @Override
-    public IValue eval(Environment env) {
+    public IValue eval(InterpreterEnvironment env) {
     	IValue nr_left = left.eval(env);
     	if (nr_left instanceof VInt) {
     		IValue nr_right = right.eval(env);

@@ -2,7 +2,7 @@ package LanguageComponents.Nodes.ImperativeCore;
 
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.Environment;
+import LanguageComponents.Environments.InterpreterEnvironment;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VRef;
@@ -17,7 +17,7 @@ public class ASTNewRef implements ASTNode {
     }
 
     @Override
-    public IValue eval(Environment env) {
+    public IValue eval(InterpreterEnvironment env) {
         IValue val = right.eval(env);
         return new VRef(val);
     }

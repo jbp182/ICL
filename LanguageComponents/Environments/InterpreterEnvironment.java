@@ -7,12 +7,12 @@ import Exceptions.NoSuchIdException;
 import LanguageComponents.Values.IValue;
 
 
-public class Environment {
+public class InterpreterEnvironment {
 
-    Environment ancestor;
+    InterpreterEnvironment ancestor;
     Map<String,IValue> envMap;
 
-    public Environment(Environment env) {
+    public InterpreterEnvironment(InterpreterEnvironment env) {
         this.ancestor = env;
         envMap = new HashMap<String, IValue>();
     }
@@ -34,11 +34,11 @@ public class Environment {
     			throw new IdAlreadyExistsException("Error: Id " + id + " already exists.");
     }
     
-    public Environment beginScope(){
-        return new Environment(this);
+    public InterpreterEnvironment beginScope(){
+        return new InterpreterEnvironment(this);
     }
     
-    public Environment endScope(){
+    public InterpreterEnvironment endScope(){
         return ancestor;
     }
 

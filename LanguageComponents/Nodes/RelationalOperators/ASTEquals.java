@@ -2,7 +2,7 @@ package LanguageComponents.Nodes.RelationalOperators;
 
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.Environment;
+import LanguageComponents.Environments.InterpreterEnvironment;
 import LanguageComponents.Environments.IdGenerator;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Values.IValue;
@@ -20,7 +20,7 @@ public class ASTEquals implements ASTNode {
     }
 
     @Override
-    public IValue eval(Environment env) {
+    public IValue eval(InterpreterEnvironment env) {
     	boolean res = left.eval(env) == right.eval(env);		// implementamos um equals nos no's ??
     	return new VBool( res );
     }

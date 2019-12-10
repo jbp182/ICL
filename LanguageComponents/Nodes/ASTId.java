@@ -3,7 +3,7 @@ import LanguageComponents.Values.IValue;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.CompilerPair;
-import LanguageComponents.Environments.Environment;
+import LanguageComponents.Environments.InterpreterEnvironment;
 
 public class ASTId implements ASTNode {
 	
@@ -14,7 +14,7 @@ public class ASTId implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment env) {
+	public IValue eval(InterpreterEnvironment env) {
 		return env.find(id);
 	}
 

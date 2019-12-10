@@ -3,7 +3,7 @@ import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VInt;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.Environment;
+import LanguageComponents.Environments.InterpreterEnvironment;
 
 public class ASTNum implements ASTNode {
 	
@@ -14,7 +14,7 @@ public class ASTNum implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment env) {
+	public IValue eval(InterpreterEnvironment env) {
 		return value;
 	}
 

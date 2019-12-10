@@ -4,7 +4,7 @@ import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VInt;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.Environment;
+import LanguageComponents.Environments.InterpreterEnvironment;
 import LanguageComponents.Nodes.ASTNode;
 
 public class ASTPlus implements ASTNode {
@@ -17,7 +17,7 @@ public class ASTPlus implements ASTNode {
 		right = v2;
 	}
 	
-	public IValue eval(Environment env) {
+	public IValue eval(InterpreterEnvironment env) {
 		IValue v1 = left.eval(env);
 		if (v1 instanceof VInt) {
 			IValue v2 = right.eval(env);

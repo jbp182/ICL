@@ -2,7 +2,7 @@ package LanguageComponents.Nodes;
 
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.Environment;
+import LanguageComponents.Environments.InterpreterEnvironment;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VBool;
 
@@ -15,7 +15,7 @@ public class ASTBool implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment env) {
+	public IValue eval(InterpreterEnvironment env) {
 		return bool;
 	}
 
