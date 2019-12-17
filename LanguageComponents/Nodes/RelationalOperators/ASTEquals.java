@@ -3,7 +3,7 @@ package LanguageComponents.Nodes.RelationalOperators;
 import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.InterpreterEnvironment;
+import LanguageComponents.Environments.Environment;
 import LanguageComponents.Environments.IdGenerator;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Types.ASTBoolType;
@@ -27,7 +27,7 @@ public class ASTEquals implements ASTNode {
     }
 
     @Override
-    public IValue eval(InterpreterEnvironment<IValue> env) {
+    public IValue eval(Environment<IValue> env) {
     	boolean res = left.eval(env) == right.eval(env);		// implementamos um equals nos no's ??
     	return new VBool( res );
     }
@@ -48,9 +48,9 @@ public class ASTEquals implements ASTNode {
     }
     
 	@Override
-	public ASTType typecheck(InterpreterEnvironment<ASTType> env) throws TypeError {
-		leftType = left.typecheck(env);
-		rightType = right.typecheck(env);
+	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
+		leftType = left.typeCheck(env);
+		rightType = right.typeCheck(env);
 		if (leftType.equals(rightType))
 			return ASTBoolType.getInstance();
 		throw new TypeError("Types do not match.");

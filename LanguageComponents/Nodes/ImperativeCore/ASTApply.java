@@ -6,7 +6,7 @@ import java.util.List;
 import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.InterpreterEnvironment;
+import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
@@ -23,11 +23,11 @@ public class ASTApply implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(InterpreterEnvironment<IValue> env) {
+	public IValue eval(Environment<IValue> env) {
 		IValue f = funName.eval(env);
 		if (f instanceof VClosure) {
 			VClosure fun = (VClosure) f;
-			InterpreterEnvironment<IValue> iEnv = fun.getIntEnv();
+			Environment<IValue> iEnv = fun.getIntEnv();
 			List<ASTNode> param = fun.getParam();
 			
 			iEnv = iEnv.beginScope();
@@ -56,7 +56,7 @@ public class ASTApply implements ASTNode {
 	}
 
 	@Override
-	public ASTType typecheck(InterpreterEnvironment<ASTType> env) throws TypeError {
+	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
 		// TODO Auto-generated method stub
 		return null;
 	}

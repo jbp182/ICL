@@ -11,4 +11,8 @@ public class ASTRefType extends ASTType {
 	public static ASTType getInstance(ASTType type) {
 		return new ASTRefType(type);
 	}
+
+	public ASTType getType() {
+		return type;
+	}
 }

@@ -3,13 +3,14 @@ package LanguageComponents.Nodes.ImperativeCore;
 import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.InterpreterEnvironment;
+import LanguageComponents.Environments.Environment;
 import LanguageComponents.Environments.IdGenerator;
 import LanguageComponents.Nodes.ASTNode;
+import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VBool;
 
-//TODO
+
 public class ASTIf implements ASTNode {
 
     private ASTNode cond;
@@ -23,7 +24,7 @@ public class ASTIf implements ASTNode {
     }
 
     @Override
-    public IValue eval(InterpreterEnvironment<IValue> env) {
+    public IValue eval(Environment<IValue> env) {
     	IValue bool = cond.eval(env);
     	if (bool instanceof VBool) {
     		if ( ((VBool)bool).isTrue() )
@@ -47,4 +48,9 @@ public class ASTIf implements ASTNode {
     	body2.compile(env, codeBlock);
     	codeBlock.emit(l2+":");
     }
+
+	@Override
+	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
+		return null;//TODO
+	}
 }

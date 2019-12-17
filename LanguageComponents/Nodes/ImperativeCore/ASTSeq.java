@@ -1,12 +1,14 @@
 package LanguageComponents.Nodes.ImperativeCore;
 
+import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.InterpreterEnvironment;
+import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.ASTNode;
+import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 
-//TODO
+
 public class ASTSeq implements ASTNode {
 
     private ASTNode left;
@@ -18,7 +20,7 @@ public class ASTSeq implements ASTNode {
     }
 
     @Override
-    public IValue eval(InterpreterEnvironment<IValue> env) {
+    public IValue eval(Environment<IValue> env) {
     	left.eval(env);
         return right.eval(env);
     }
@@ -28,5 +30,10 @@ public class ASTSeq implements ASTNode {
         left.compile(env,codeBlock);
         codeBlock.emit("pop");
         right.compile(env,codeBlock);
+    }
+
+    @Override
+    public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
+        return null;//TODO
     }
 }

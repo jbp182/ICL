@@ -22,7 +22,6 @@ public class CodeBlock {
 
     void createFileWithInstructions(String instruction,String fileName) throws IOException {
         File f = new File(fileName);
-        f.delete();
         f.createNewFile();
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
         out.write(instruction);
@@ -40,7 +39,6 @@ public class CodeBlock {
 
     private void genClassWithException(CompilerEnvironment env, Set<String> ids) throws IOException {
         File f = new File("./target/"+ env + ".j");
-        f.delete();
         f.createNewFile();
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
         out.flush();
@@ -77,7 +75,6 @@ public class CodeBlock {
 
     private void genClassForRef() throws IOException {
         File f = new File("./target/ref_int.j");
-        f.delete();
         f.createNewFile();
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
         out.flush();
@@ -101,9 +98,6 @@ public class CodeBlock {
     }
 
 
-
-
-
     public void dump(String fileName) throws IOException {
         File f = new File("./target/" + fileName);
         f.createNewFile();
@@ -113,9 +107,11 @@ public class CodeBlock {
     }
 
     private void createTargetDir(){
-        File f = new File("./target/asas");
+        File f = new File("./target/");
         f.mkdirs();
-        f.delete();
+        for(File file: f.listFiles())
+            if (!file.isDirectory())
+                file.delete();
     }
 
     private void createJFile(File f){

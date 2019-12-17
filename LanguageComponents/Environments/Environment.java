@@ -6,12 +6,12 @@ import Exceptions.IdAlreadyExistsException;
 import Exceptions.NoSuchIdException;
 
 
-public class InterpreterEnvironment<E> {
+public class Environment<E> {
 
-    InterpreterEnvironment<E> ancestor;
+    Environment<E> ancestor;
     Map<String,E> envMap;
 
-    public InterpreterEnvironment(InterpreterEnvironment<E> env) {
+    public Environment(Environment<E> env) {
         this.ancestor = env;
         envMap = new HashMap<String, E>();
     }
@@ -33,11 +33,11 @@ public class InterpreterEnvironment<E> {
     			throw new IdAlreadyExistsException("Error: Id " + id + " already exists.");
     }
     
-    public InterpreterEnvironment<E> beginScope(){
-        return new InterpreterEnvironment<E>(this);
+    public Environment<E> beginScope(){
+        return new Environment<E>(this);
     }
     
-    public InterpreterEnvironment<E> endScope(){
+    public Environment<E> endScope(){
         return ancestor;
     }
 

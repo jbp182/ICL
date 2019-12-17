@@ -3,13 +3,13 @@ package LanguageComponents.Nodes.ImperativeCore;
 import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.InterpreterEnvironment;
+import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.ASTNode;
+import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VRef;
 
 
-//TODO
 public class ASTAssign implements ASTNode {
 
     private ASTNode left;
@@ -21,7 +21,7 @@ public class ASTAssign implements ASTNode {
     }
 
     @Override
-    public IValue eval(InterpreterEnvironment<IValue> env) {
+    public IValue eval(Environment<IValue> env) {
         IValue ref = left.eval(env);
 
         if (ref instanceof VRef) {
@@ -43,4 +43,8 @@ public class ASTAssign implements ASTNode {
         codeBlock.emit("getfield ref_int/v I");
     }
 
+    @Override
+    public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
+        return null;//TODO
+    }
 }

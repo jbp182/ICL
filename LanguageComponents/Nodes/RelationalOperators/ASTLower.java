@@ -3,7 +3,7 @@ package LanguageComponents.Nodes.RelationalOperators;
 import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.InterpreterEnvironment;
+import LanguageComponents.Environments.Environment;
 import LanguageComponents.Environments.IdGenerator;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Types.ASTBoolType;
@@ -29,7 +29,7 @@ public class ASTLower implements ASTNode {
     }
 
     @Override
-    public IValue eval(InterpreterEnvironment<IValue> env) {
+    public IValue eval(Environment<IValue> env) {
     	IValue nr_left = left.eval(env);
     	if (nr_left instanceof VInt) {
     		IValue nr_right = right.eval(env);
@@ -58,9 +58,9 @@ public class ASTLower implements ASTNode {
     }
 
 	@Override
-	public ASTType typecheck(InterpreterEnvironment<ASTType> env) throws TypeError {
-		leftType = left.typecheck(env);
-		rightType = right.typecheck(env);
+	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
+		leftType = left.typeCheck(env);
+		rightType = right.typeCheck(env);
 		if (leftType instanceof ASTIntType && rightType instanceof ASTIntType)
 			return ASTBoolType.getInstance();
 		throw new TypeError("Type mismatch, expecting int.");

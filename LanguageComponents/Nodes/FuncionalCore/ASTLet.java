@@ -1,13 +1,15 @@
 package LanguageComponents.Nodes.FuncionalCore;
 
+import Exceptions.TypeError;
 import LanguageComponents.Nodes.ImperativeCore.ASTNewRef;
+import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 
 import java.util.LinkedList;
 
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.InterpreterEnvironment;
+import LanguageComponents.Environments.Environment;
 import LanguageComponents.Environments.IdGenerator;
 import LanguageComponents.Nodes.ASTNode;
 
@@ -25,9 +27,9 @@ public class ASTLet implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(InterpreterEnvironment<IValue> env) {
+	public IValue eval(Environment<IValue> env) {
 
-		InterpreterEnvironment<IValue> newEnv = env.beginScope();
+		Environment<IValue> newEnv = env.beginScope();
 		
 		while (ids.size() > 0 && inits.size() > 0) {
 			IValue v1 = inits.poll().eval(env);
@@ -48,7 +50,12 @@ public class ASTLet implements ASTNode {
 		env = env.endScope(codeBlock);
 	}
 
-	private void genStoreValues(CodeBlock codeBlock,CompilerEnvironment env) {
+	@Override
+	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
+		return null;
+	}
+
+	private void genStoreValues(CodeBlock codeBlock, CompilerEnvironment env) {
 		while( ids.size() > 0 && inits.size() > 0 ) {
 			codeBlock.emit("aload 4");
 			ASTNode node = inits.poll();

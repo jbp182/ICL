@@ -3,7 +3,7 @@ package LanguageComponents.Nodes.LogicOperators;
 import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.InterpreterEnvironment;
+import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Types.ASTBoolType;
 import LanguageComponents.Types.ASTType;
@@ -25,7 +25,7 @@ public class ASTOr implements ASTNode {
     }
 
     @Override
-    public IValue eval(InterpreterEnvironment<IValue> env) {
+    public IValue eval(Environment<IValue> env) {
     	IValue bool1 = left.eval(env);
     	if (bool1 instanceof VBool) {
     		IValue bool2 = right.eval(env);
@@ -45,9 +45,9 @@ public class ASTOr implements ASTNode {
     }
 
 	@Override
-	public ASTType typecheck(InterpreterEnvironment<ASTType> env) throws TypeError {
-		leftType = left.typecheck(env);
-		rightType = right.typecheck(env);
+	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
+		leftType = left.typeCheck(env);
+		rightType = right.typeCheck(env);
 		if (leftType instanceof ASTBoolType && rightType instanceof ASTBoolType)
 			return ASTBoolType.getInstance();
 		throw new TypeError("type mismatch. expected boolean.");

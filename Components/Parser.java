@@ -3,7 +3,7 @@
 package Components;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.InterpreterEnvironment;
+import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.*;
 import LanguageComponents.Nodes.ArithmeticOperators.*;
 import LanguageComponents.Nodes.FuncionalCore.*;
@@ -30,7 +30,7 @@ public class Parser implements ParserConstants {
     while (true) {
         try {
         exp = parser.Start();
-        exp.eval(new InterpreterEnvironment(null)).show();
+        exp.eval(new Environment(null)).show();
         } catch (Exception e) {
           System.out.println ("Syntax Error!\u005cn" + e.getMessage());
           parser.ReInit(System.in);

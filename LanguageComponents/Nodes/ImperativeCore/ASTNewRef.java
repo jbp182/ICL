@@ -1,13 +1,15 @@
 package LanguageComponents.Nodes.ImperativeCore;
 
+import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.InterpreterEnvironment;
+import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.ASTNode;
+import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VRef;
 
-//TODO
+
 public class ASTNewRef implements ASTNode {
 
     private ASTNode right;
@@ -17,7 +19,7 @@ public class ASTNewRef implements ASTNode {
     }
 
     @Override
-    public IValue eval(InterpreterEnvironment<IValue> env) {
+    public IValue eval(Environment<IValue> env) {
         IValue val = right.eval(env);
         return new VRef(val);
     }
@@ -32,4 +34,9 @@ public class ASTNewRef implements ASTNode {
         codeBlock.emit("putfield ref_int/v I");
     }
 
+
+    @Override
+    public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
+        return null;//TODO
+    }
 }

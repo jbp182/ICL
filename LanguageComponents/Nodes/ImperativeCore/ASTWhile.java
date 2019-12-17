@@ -3,13 +3,13 @@ package LanguageComponents.Nodes.ImperativeCore;
 import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.InterpreterEnvironment;
+import LanguageComponents.Environments.Environment;
 import LanguageComponents.Environments.IdGenerator;
 import LanguageComponents.Nodes.ASTNode;
+import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VBool;
 
-//TODO
 public class ASTWhile implements ASTNode {
 
     private ASTNode cond;
@@ -22,7 +22,7 @@ public class ASTWhile implements ASTNode {
 
     //TODO while conveção devolve falso
     @Override
-    public IValue eval(InterpreterEnvironment<IValue> env) {
+    public IValue eval(Environment<IValue> env) {
     	IValue bool = cond.eval(env);
     	if (bool instanceof VBool) {
         	IValue res = null;
@@ -54,4 +54,9 @@ public class ASTWhile implements ASTNode {
     	codeBlock.emit(l2 + ":");
     	codeBlock.emit("sipush 0");
     }
+
+	@Override
+	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
+		return null;//TODO
+	}
 }

@@ -5,16 +5,10 @@ PARSER_BEGIN(Parser)
 package Components;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.InterpreterEnvironment;
+import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.*;
-import LanguageComponents.Nodes.ArithmeticOperators.*;
-import LanguageComponents.Nodes.FuncionalCore.*;
-import LanguageComponents.Nodes.ImperativeCore.*;
-import LanguageComponents.Nodes.LogicOperators.*;
-import LanguageComponents.Nodes.RelationalOperators.*;
 import java.io.FileInputStream;
 import java.io.File;
-import java.util.LinkedList;
 
 public class Parser {
 
@@ -32,7 +26,7 @@ public class Parser {
     while (true) {
         try {
         exp = parser.Start();
-        exp.eval(new InterpreterEnvironment(null)).show();
+        exp.eval(new Environment(null)).show();
         } catch (Exception e) {
           System.out.println ("Syntax Error!\n" + e.getMessage());
           parser.ReInit(System.in);

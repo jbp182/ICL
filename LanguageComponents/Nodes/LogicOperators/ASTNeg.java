@@ -3,7 +3,7 @@ package LanguageComponents.Nodes.LogicOperators;
 import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.InterpreterEnvironment;
+import LanguageComponents.Environments.Environment;
 import LanguageComponents.Environments.IdGenerator;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Types.ASTBoolType;
@@ -23,7 +23,7 @@ public class ASTNeg implements ASTNode {
     }
 
     @Override
-    public IValue eval(InterpreterEnvironment<IValue> env) {
+    public IValue eval(Environment<IValue> env) {
     	IValue bool = node.eval(env);
     	if (bool instanceof VBool)
     		return new VBool( !((VBool)bool).isTrue() );
@@ -45,8 +45,8 @@ public class ASTNeg implements ASTNode {
     }
 
 	@Override
-	public ASTType typecheck(InterpreterEnvironment<ASTType> env) throws TypeError {
-		type = node.typecheck(env);
+	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
+		type = node.typeCheck(env);
 		if (type instanceof ASTBoolType)
 			return ASTBoolType.getInstance();
 		throw new TypeError("Type mismatch. Expected boolean.");

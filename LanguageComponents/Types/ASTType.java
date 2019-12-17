@@ -16,14 +16,22 @@ public abstract class ASTType {
 				return ASTIntType.getInstance();
 			case BOOL:
 				return ASTBoolType.getInstance();
-			case REF:
-				return ASTRefType.getInstance();
 			case FUN:
 				return ASTFunType.getInstance();
 			default:
 				throw new TypeError("No such type exception.");
 		}
 				
+	}
+
+	public static ASTType build(String type, ASTType subType) {
+		switch(type) {
+			case REF:
+				return ASTRefType.getInstance(subType);
+			default:
+				return build(type);
+		}
+
 	}
 
 }

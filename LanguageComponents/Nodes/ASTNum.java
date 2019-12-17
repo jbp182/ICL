@@ -4,7 +4,7 @@ import LanguageComponents.Values.VInt;
 import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
-import LanguageComponents.Environments.InterpreterEnvironment;
+import LanguageComponents.Environments.Environment;
 import LanguageComponents.Types.ASTIntType;
 import LanguageComponents.Types.ASTType;
 
@@ -17,7 +17,7 @@ public class ASTNum implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(InterpreterEnvironment<IValue> env) {
+	public IValue eval(Environment<IValue> env) {
 		return value;
 	}
 
@@ -27,7 +27,7 @@ public class ASTNum implements ASTNode {
 	}
 
 	@Override
-	public ASTType typecheck(InterpreterEnvironment<ASTType> env) throws TypeError {
+	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
 		return ASTIntType.getInstance();
 	}
 
