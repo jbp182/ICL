@@ -9,4 +9,9 @@ public class ASTBoolType extends ASTType {
 		
 		return singleton;
 	}
+
+	@Override
+	public String toString() {
+		return "I";
+	}
 }

@@ -9,4 +9,6 @@ private static ASTType singleton;
 		
 		return singleton;
 	}
+
+	//TODO
 }

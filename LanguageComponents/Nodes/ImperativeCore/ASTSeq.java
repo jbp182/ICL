@@ -12,7 +12,10 @@ import LanguageComponents.Values.IValue;
 public class ASTSeq implements ASTNode {
 
     private ASTNode left;
+    private ASTType leftType;
+
     private ASTNode right;
+    private ASTType rightType;
 
     public ASTSeq(ASTNode left, ASTNode right) {
         this.left = left;
@@ -34,6 +37,8 @@ public class ASTSeq implements ASTNode {
 
     @Override
     public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
-        return null;//TODO
+        leftType = left.typeCheck(env);
+        rightType = right.typeCheck(env);
+        return rightType;
     }
 }

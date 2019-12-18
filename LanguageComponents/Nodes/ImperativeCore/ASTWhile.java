@@ -6,21 +6,28 @@ import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
 import LanguageComponents.Environments.IdGenerator;
 import LanguageComponents.Nodes.ASTNode;
+import LanguageComponents.Types.ASTBoolType;
 import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VBool;
+import sun.jvm.hotspot.jdi.BooleanTypeImpl;
 
 public class ASTWhile implements ASTNode {
 
-    private ASTNode cond;
+	private static final String TYPE_ERROR_MESSAGE = "Conditional expression must return true or false.";
+
+	private ASTNode cond;
+	private ASTType condType;
+
     private ASTNode body;
+    private ASTType bodyType;
+
 
     public ASTWhile(ASTNode cond, ASTNode body) {
         this.cond = cond;
         this.body = body;
     }
 
-    //TODO while conveção devolve falso
     @Override
     public IValue eval(Environment<IValue> env) {
     	IValue bool = cond.eval(env);
@@ -34,10 +41,10 @@ public class ASTWhile implements ASTNode {
     		}
     		
     		env = env.endScope();
-    		return res;
+    		return bool;
     	}
     	else
-    		throw new TypeError("Conditional expression must return true or false.");
+    		throw new TypeError(TYPE_ERROR_MESSAGE);
     }
 
     @Override
@@ -57,6 +64,13 @@ public class ASTWhile implements ASTNode {
 
 	@Override
 	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
-		return null;//TODO
+    	this.condType = this.cond.typeCheck(env);
+
+		if(!(cond instanceof ASTBoolType))
+			throw new TypeError(TYPE_ERROR_MESSAGE);
+
+		this.bodyType = this.body.typeCheck(env);
+
+    	return condType;
 	}
 }

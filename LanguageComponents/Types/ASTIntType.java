@@ -10,4 +10,9 @@ public class ASTIntType extends ASTType {
 		
 		return singleton;
 	}
+
+	@Override
+	public String toString() {
+		return "I";
+	}
 }

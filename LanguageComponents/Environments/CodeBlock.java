@@ -173,4 +173,7 @@ public class CodeBlock {
         return builder.toString();
     }
 
+    public void buildRefIfDoesNotExist(String toString) {
+        //todo
+    }
 }
