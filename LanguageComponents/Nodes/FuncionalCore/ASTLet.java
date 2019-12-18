@@ -51,7 +51,7 @@ public class ASTLet implements ASTNode {
 		env = env.beginScope(codeBlock);
 		genStoreValues(codeBlock,env);
 		body.compile(env,codeBlock);
-		env = env.endScope(codeBlock);
+		env = env.endScope(codeBlock,ids,types);
 	}
 
 	@Override
@@ -79,16 +79,19 @@ public class ASTLet implements ASTNode {
 	private void genStoreValues(CodeBlock codeBlock, CompilerEnvironment env) {
 		Iterator<String> itId = ids.iterator();
 		Iterator<ASTNode> itInit = inits.iterator();
-		while( itId.hasNext() && itInit.hasNext()) {
+		Iterator<ASTType> itType = types.iterator();
+
+		while( itId.hasNext() && itInit.hasNext() && itType.hasNext()) {
 			codeBlock.emit("aload 4");
 			ASTNode node = itInit.next();
+			ASTType type = itType.next();
 			String id = itId.next();
 			node.compile(env.getAncestor(), codeBlock);
 
 			String compileId;
 			if(isRef(node)) {
 				compileId =  IdGenerator.genRefName();
-				codeBlock.emit("putfield " + env + "/" +compileId + " Lref_int;");
+				codeBlock.emit("putfield " + env + "/" +compileId + " L"+type+";");
 			}else{
 				compileId =  IdGenerator.genVariableName();
 				codeBlock.emit("putfield " + env + "/" + compileId + " I");

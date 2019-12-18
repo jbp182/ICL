@@ -1,6 +1,10 @@
 package LanguageComponents.Environments;
 
+import LanguageComponents.Types.ASTType;
+
 import java.io.*;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 public class CodeBlock {
@@ -26,15 +30,15 @@ public class CodeBlock {
         out.close();
     }
 
-    public void genClass(CompilerEnvironment env, Set<String> ids) {
+    public void genClass(CompilerEnvironment env, List<String> ids, List<ASTType> types) {
         try {
-            genClassWithException(env,ids);
+            genClassWithException(env,ids,types);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void genClassWithException(CompilerEnvironment env, Set<String> ids) throws IOException {
+    private void genClassWithException(CompilerEnvironment env, List<String> ids, List<ASTType> types) throws IOException {
         File f = new File("./target/"+ env + ".j");
         f.createNewFile();
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
@@ -42,19 +46,26 @@ public class CodeBlock {
 
         out.write(".class " + env + "\n");
         out.write(".super java/lang/Object\n");
+
         if(env.toString().equals("f0"))
             out.write(".field public sl Ljava/lang/Object;\n");
         else
             out.write(".field public sl L"+env.getAncestor() + ";\n");
 
-        for(String id : ids) {
+        Iterator<String> idsIt = ids.iterator();
+        Iterator<ASTType> typesIt = types.iterator();
+
+        while(idsIt.hasNext() && typesIt.hasNext()){
+            String id = idsIt.next();
+            ASTType astType = typesIt.next();
+
             if(isRef(id)){
-                out.write(".field public " +id+" Lref_int;\n");
+                out.write(".field public " +id+" L"+astType+";\n");
             }else{
                 out.write(".field public " +id+" I\n");
             }
-
         }
+
         out.write(".method public <init>()V\n");
         out.write("\taload_0\n");
         out.write("\tinvokenonvirtual java/lang/Object/<init>()V\n");
@@ -150,7 +161,7 @@ public class CodeBlock {
                 if(debug)
                     runProcess(comm);
                 else
-                    runProcessWihoutOutput(comm);
+                    runProcessWithoutOutput(comm);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -164,7 +175,7 @@ public class CodeBlock {
         pro.waitFor();
     }
 
-    private static void runProcessWihoutOutput(String command) throws Exception {
+    private static void runProcessWithoutOutput(String command) throws Exception {
         Process pro = Runtime.getRuntime().exec(command);
         pro.waitFor();
     }

@@ -35,7 +35,7 @@ public class ASTNewRef implements ASTNode {
         codeBlock.emit("invokespecial ref_"+ rightType +"/<init>()V");
         codeBlock.emit("dup");
         right.compile(env,codeBlock);
-        codeBlock.emit("putfield ref_int/v "+rightType);
+        codeBlock.emit("putfield ref_"+rightType+"/v "+rightType);
     }
 
     @Override

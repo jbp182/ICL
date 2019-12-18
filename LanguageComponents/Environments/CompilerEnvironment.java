@@ -1,11 +1,10 @@
 package LanguageComponents.Environments;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 import Exceptions.IdAlreadyExistsException;
 import Exceptions.NoSuchIdException;
+import LanguageComponents.Types.ASTType;
 
 public class CompilerEnvironment {
     private String frameName;
@@ -76,8 +75,14 @@ public class CompilerEnvironment {
 
     }
 
-    public CompilerEnvironment endScope(CodeBlock blk){
-        blk.genClass(this,new HashSet<>(this.envMap.values()));
+    public CompilerEnvironment endScope(CodeBlock blk, List<String> ids, List<ASTType> types){
+        List<String> convertedIds = new LinkedList<>();
+
+        for(String id : ids){
+            convertedIds.add(this.find(id).variableId);
+        }
+
+        blk.genClass(this,convertedIds,types);
 
         blk.emit("aload 4");
         if(frameName.equals("f0"))

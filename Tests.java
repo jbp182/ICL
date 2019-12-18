@@ -27,9 +27,9 @@ public class Tests {
 	@Test public void test5() { test(5); }
 	@Test public void test6() { test(6); }
 	@Test public void test7() { test(7); }
-	//@Test public void test8() { test(8); }
-	//@Test public void test9() { test(9); }
-	//@Test public void test10() { test(10); }
+	@Test public void test8() { test(8); }
+	@Test public void test9() { test(9); }
+	@Test public void test10() { test(10); }
 	//@Test public void test11() { test(11); }
 	//@Test public void test12() { test(12); }
 	//@Test public void test13() { test(13); }

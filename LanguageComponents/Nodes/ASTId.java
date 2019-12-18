@@ -49,7 +49,7 @@ public class ASTId implements ASTNode {
 		}
 
 		if(isRef(pair.variableId)) {
-			codeBlock.emit("getfield " + pair.frameId + "/" + pair.variableId + " Lref_int;");
+			codeBlock.emit("getfield " + pair.frameId + "/" + pair.variableId + " L"+type+";");
 		}
 		else
 			codeBlock.emit("getfield "+pair.frameId+"/"+pair.variableId+" I");
@@ -65,6 +65,7 @@ public class ASTId implements ASTNode {
 
 	@Override
 	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
-		return env.find(this.id);
+		type = env.find(this.id);
+		return type;
 	}
 }

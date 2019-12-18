@@ -64,7 +64,7 @@ public class ASTWhile implements ASTNode {
 	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
     	this.condType = this.cond.typeCheck(env);
 
-		if(!(cond instanceof ASTBoolType))
+		if(!(condType instanceof ASTBoolType))
 			throw new TypeError(TYPE_ERROR_MESSAGE);
 
 		this.bodyType = this.body.typeCheck(env);
