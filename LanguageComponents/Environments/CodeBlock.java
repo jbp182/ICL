@@ -5,16 +5,13 @@ import java.util.Set;
 
 public class CodeBlock {
     private StringBuilder builder;
+    public static boolean debug = true;
 
     public CodeBlock() {
         this.builder = new StringBuilder();
         createTargetDir();
-        try {
-            genClassForRef();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
+
 
     public void emit(String instruction){
         builder.append("\t"+instruction+"\n");
@@ -73,17 +70,17 @@ public class CodeBlock {
         return id.charAt(0) == 'r';
     }
 
-    private void genClassForRef() throws IOException {
+    private void genClassForRef(String name, String subtype) throws IOException {
         File f = new File("./target/ref_int.j");
         f.createNewFile();
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
         out.flush();
 
 
-        out.write(".class ref_int\n");
+        out.write(".class "+name+"\n");
         out.write(".super java/lang/Object\n");
 
-        out.write(".field public v I\n");
+        out.write(".field public v "+subtype+"\n");
 
 
         out.write(".method public <init>()V\n");
@@ -94,9 +91,9 @@ public class CodeBlock {
         out.flush();
         out.close();
 
-        System.out.println("Generated: " + f.getPath());
+        if(debug)
+            System.out.println("Generated: " + f.getPath());
     }
-
 
     public void dump(String fileName) throws IOException {
         File f = new File("./target/" + fileName);
@@ -139,7 +136,10 @@ public class CodeBlock {
         out.flush();
         
         inInit.close(); inEnd.close(); out.close();
-        System.out.println("Generated: " + f.getPath());
+
+        if(debug){
+            System.out.println("Generated: " + f.getPath());
+        }
     }
 
     private void compileJ(){
@@ -168,12 +168,20 @@ public class CodeBlock {
         }
     }
 
-
     public String toString(){
         return builder.toString();
     }
 
-    public void buildRefIfDoesNotExist(String toString) {
-        //todo
+    public void buildRefIfDoesNotExist(String name) {
+        try {
+            genClassForRef(name,name.replaceFirst("ref_",""));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+    public static void runJava() throws Exception {
+        runProcess("java Main");
+    }
+
 }
