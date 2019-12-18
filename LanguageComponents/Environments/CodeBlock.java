@@ -1,5 +1,7 @@
 package LanguageComponents.Environments;
 
+import LanguageComponents.Nodes.ASTNode;
+import LanguageComponents.Types.ASTFunType;
 import LanguageComponents.Types.ASTRefType;
 import LanguageComponents.Types.ASTType;
 
@@ -200,12 +202,108 @@ public class CodeBlock {
     }
 
     public void buildRefIfDoesNotExist(ASTType type) {
+        //TODO if does not exist
         try {
             genClassForRef(type);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    public void buildFunInterfaceIfDoesNotExist(ASTFunType type){
+        try {
+            genClassForInterface(type);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void genClassForInterface(ASTFunType type) throws IOException {
+        File f = new File("./target/"+type+".j");
+        f.createNewFile();
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
+        out.flush();
+
+        out.write(".interface "+type+"\n");
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(".method (");
+        Iterator<ASTType> it = type.getParamTypes().iterator();
+        if(it.hasNext()){
+            builder.append(it.next());
+        }
+
+        while(it.hasNext()){
+            builder.append(";");
+            builder.append(it.next());
+        }
+
+        builder.append(")"+type.getReturnType());
+
+        out.write(builder.toString());
+        out.write(".end");
+        if(debug)
+            System.out.println("Generated: " + f.getPath());
+    }
+
+    public void createFunClass(String id, ASTNode body,ASTFunType type,List<ASTType> typeList,CompilerEnvironment env){
+        try {
+            createFunClassWithException(id,body,type,typeList,env);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //TODO
+    private void createFunClassWithException(String id, ASTNode body, ASTFunType type ,List<ASTType> typeList,CompilerEnvironment env) throws IOException {
+        File f = new File("./target/"+id+".j");
+        f.createNewFile();
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
+        out.flush();
+
+        out.write(".class " + id);
+        out.write(".implements "+type);
+        out.write(".field public SL "+env+";");
+        out.write(".locals k + 1");
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(".method call(");
+        Iterator<ASTType> it = type.getParamTypes().iterator();
+        if(it.hasNext()){
+            builder.append(it.next());
+        }
+        while(it.hasNext()){
+            builder.append(";");
+            builder.append(it.next());
+        }
+
+        out.write(builder.toString());
+        out.write("new "+id +"_frame");
+        out.write("dup");
+
+        int i = 0;
+        for(ASTType t : typeList){
+            out.write("aload "+i++);
+            out.write("getfield " + id + "/SL "+t);
+            out.write("putfield " + id +"_frame/sl" + t);
+            out.write("dup");
+        }
+
+        out.write("astore SL");
+        StringBuilder builderTmp = this.builder;
+        this.builder = new StringBuilder();
+
+        body.compile(env,this);
+
+        out.write(this.builder.toString());
+
+        this.builder = builderTmp;
+
+        out.write("return");
+        out.write(".end");
+    }
+
+
 
     public static void runJava() throws Exception {
         runProcess("java -cp ./target Main");

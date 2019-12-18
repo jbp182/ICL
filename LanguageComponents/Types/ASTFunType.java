@@ -53,4 +53,17 @@ public class ASTFunType extends ASTType {
 		
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+
+		for(ASTType type : paramTypes){
+			builder.append(type);
+		}
+
+		builder.append("_"+this.returnType);
+
+		return builder.toString();
+	}
 }

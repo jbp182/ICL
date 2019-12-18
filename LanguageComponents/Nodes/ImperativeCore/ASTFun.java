@@ -4,6 +4,7 @@ import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
+import LanguageComponents.Environments.IdGenerator;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Types.ASTFunType;
 import LanguageComponents.Types.ASTType;
@@ -19,6 +20,7 @@ public class ASTFun implements ASTNode {
 
     private List<String> paramIds;
     private List<ASTType> paramTypes;
+    private ASTFunType funType;
     private ASTNode body;
     
     public ASTFun(List<String> ids, List<ASTType> types, ASTNode body) {
@@ -35,7 +37,20 @@ public class ASTFun implements ASTNode {
     @Override
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
         //TODO
+        String id = IdGenerator.genFunctionId();
+        createCloser(codeBlock,id);
+        codeBlock.createFunClass(id,body,funType,this.paramTypes,env);
     }
+
+    private void createCloser(CodeBlock codeBlock,String id){
+        codeBlock.emit("new " + id);
+        codeBlock.emit("dup");
+        codeBlock.emit("aload 4");
+        codeBlock.emit("putfield "+id+"SL L"+funType+";");
+
+        codeBlock.buildFunInterfaceIfDoesNotExist(funType);
+    }
+
 
     @Override
     public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
@@ -50,7 +65,7 @@ public class ASTFun implements ASTNode {
 		ASTType bodyType = body.typeCheck(newEnv);
 		
 		env = newEnv.endScope();
-		
-		return ASTFunType.getInstance(paramTypes, bodyType);
+		this.funType = (ASTFunType)ASTFunType.getInstance(paramTypes, bodyType);
+		return funType;
     }
 }
