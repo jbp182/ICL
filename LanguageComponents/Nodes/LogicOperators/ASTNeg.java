@@ -11,7 +11,6 @@ import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VBool;
 
-//TODO
 public class ASTNeg implements ASTNode {
 
     private ASTNode node;

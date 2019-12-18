@@ -10,7 +10,6 @@ import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VBool;
 
-//TODO
 public class ASTAnd implements ASTNode {
 
     private ASTNode left;

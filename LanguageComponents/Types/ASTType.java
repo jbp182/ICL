@@ -3,13 +3,13 @@ package LanguageComponents.Types;
 import Exceptions.TypeError;
 
 public abstract class ASTType {
-	
+
 	public static final String INT = "int";
 	public static final String BOOL = "bool";
 	public static final String REF = "ref";
 	public static final String FUN = "fun";
-	
-	
+
+
 	public static ASTType build(String type) {
 		switch(type) {
 			case INT:

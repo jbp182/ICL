@@ -10,7 +10,6 @@ import LanguageComponents.Types.ASTBoolType;
 import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VBool;
-import sun.jvm.hotspot.jdi.BooleanTypeImpl;
 
 public class ASTWhile implements ASTNode {
 
@@ -21,7 +20,6 @@ public class ASTWhile implements ASTNode {
 
     private ASTNode body;
     private ASTType bodyType;
-
 
     public ASTWhile(ASTNode cond, ASTNode body) {
         this.cond = cond;
@@ -73,4 +71,5 @@ public class ASTWhile implements ASTNode {
 
     	return condType;
 	}
+
 }
