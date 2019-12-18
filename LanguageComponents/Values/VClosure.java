@@ -9,28 +9,28 @@ import java.util.stream.Collectors;
 
 public class VClosure implements IValue {
 
-	private List<ASTNode> param;
+	private List<String> param;
 	private ASTNode body;
 
 	private CompilerEnvironment compilerEnvironment;
 	private Environment<IValue> environment;
 
-	private VClosure(List<ASTNode> param, ASTNode body) {
+	private VClosure(List<String> param, ASTNode body) {
 		this.param = param;
 		this.body = body;
 	}
 
-	public VClosure(List<ASTNode> param, ASTNode body,CompilerEnvironment compilerEnvironment){
+	public VClosure(List<String> param, ASTNode body,CompilerEnvironment compilerEnvironment){
 		this(param,body);
 		this.compilerEnvironment = compilerEnvironment;
 	}
 
-	public VClosure(List<ASTNode> param, ASTNode body, Environment<IValue> environment){
+	public VClosure(List<String> param, ASTNode body, Environment<IValue> environment){
 		this(param,body);
 		this.environment = environment;
 	}
 	
-	public List<ASTNode> getParam() {
+	public List<String> getParam() {
 		return param.stream().collect(Collectors.toList());
 	}
 	

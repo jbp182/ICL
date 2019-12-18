@@ -228,7 +228,8 @@ List<ASTNode> AL():
   	{ args.add(n); }
   	( < COMMA > n = EM()
   		{ args.add(n); }
- 	)* )?
+ 	)*
+  )?
  { return args; }
 }
 
@@ -239,7 +240,7 @@ void PL(List<String> ids, List<ASTType> types):
 {
   (id=<Id><COLON > type=getType()
   		{ ids.add( id.image ); types.add( type ); }
-   	 ( id=< Id ><COLON > type=getType()
+   	 (< COMMA > id=< Id ><COLON > type=getType()
   		{ ids.add( id.image ); types.add( type ); }
   	 )*
   )?

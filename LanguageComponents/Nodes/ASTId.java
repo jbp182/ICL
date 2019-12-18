@@ -14,11 +14,7 @@ public class ASTId implements ASTNode {
 	
 	public ASTId(String id) {
 		this.id = id;
-	}
-	
-	public ASTId(String id, String type) {
-		this.id = id;
-		this.type = ASTType.build(type);
+		this.type = null;
 	}
 
 	@Override
@@ -30,9 +26,6 @@ public class ASTId implements ASTNode {
 		return id;
 	}
 	
-	public ASTType getType() {
-		return type;
-	}
 
 	@Override
 	public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
@@ -65,7 +58,8 @@ public class ASTId implements ASTNode {
 
 	@Override
 	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
-		type = env.find(this.id);
+		if (type == null)
+			type = env.find(this.id);
 		return type;
 	}
 }

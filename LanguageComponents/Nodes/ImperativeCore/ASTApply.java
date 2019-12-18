@@ -8,6 +8,7 @@ import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.ASTNode;
+import LanguageComponents.Types.ASTFunType;
 import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VClosure;
@@ -28,18 +29,14 @@ public class ASTApply implements ASTNode {
 		if (f instanceof VClosure) {
 			VClosure fun = (VClosure) f;
 			Environment<IValue> iEnv = fun.getIntEnv();
-			List<ASTNode> param = fun.getParam();
+			List<String> param = fun.getParam();
 			
 			iEnv = iEnv.beginScope();
-			Iterator<ASTNode> it_param = param.iterator();
-			Iterator<ASTNode> it_args = args.iterator();
-			ASTNode p, a;
+			Iterator<String> itParam = param.iterator();
+			Iterator<ASTNode> itArgs = args.iterator();
 			IValue v;
-			while (it_param.hasNext() && it_args.hasNext()) {
-				p = it_param.next();
-				a = it_args.next();
-				v = a.eval(env);
-				iEnv.assoc(p.toString(), v);
+			while (itParam.hasNext() && itArgs.hasNext()) {
+				iEnv.assoc(itParam.next(), itArgs.next().eval(env));
 			}
 			
 			v = fun.getBody().eval(iEnv);
@@ -57,8 +54,28 @@ public class ASTApply implements ASTNode {
 
 	@Override
 	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
-		// TODO Auto-generated method stub
-		return null;
+		ASTType funType = funName.typeCheck(env);
+		if (funType instanceof ASTFunType) {
+			ASTFunType t = (ASTFunType) funType;
+			
+			env = env.beginScope();
+			
+			Iterator<ASTType> itTypes = t.getParamTypes().iterator();
+			Iterator<ASTNode> itArgs = args.iterator();
+			ASTType type;
+			ASTNode arg;
+			while( itTypes.hasNext() && itArgs.hasNext() ) {
+				type = itTypes.next();
+				arg = itArgs.next();
+				if ( !type.equals(arg.typeCheck(env)) )
+					throw new TypeError("Arguments types do not match with previously declared types.");
+				
+				return t.getReturnType();
+			}			
+		}
+		throw new TypeError("Not a function.");
+		
+		
 	}
 
 }

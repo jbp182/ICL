@@ -1,6 +1,5 @@
 package LanguageComponents.Types;
 
-import java.util.Objects;
 
 public class ASTRefType extends ASTType {
 	
@@ -23,11 +22,22 @@ public class ASTRefType extends ASTType {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		ASTRefType that = (ASTRefType) o;
-		return Objects.equals(type, that.type);
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if ( !(obj instanceof ASTRefType))
+			return false;
+		
+		ASTRefType other = (ASTRefType) obj;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		
+		return true;
 	}
 
 	@Override
