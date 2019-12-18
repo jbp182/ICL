@@ -71,7 +71,7 @@ public class ASTIf implements ASTNode {
     	bodyType1 = body1.typeCheck(env);
     	bodyType2 = body2.typeCheck(env);
 
-    	if(bodyType1.equals(bodyType2)){
+    	if(!bodyType1.equals(bodyType2)){
     		throw new TypeError(IF_BODY_S_MUST_BE_SOMETYPE);
 		}
 

@@ -15,10 +15,8 @@ import org.junit.Test;
 
 public class Tests {
 
-
 	private static final String FORMATO_INPUT = "$in.icl";
 	private static final String FORMATO_OUTPUT = "$out.icl";
-
 
 	@Test public void test1() { test(1); }
 	@Test public void test2() { test(2); }
@@ -32,7 +30,11 @@ public class Tests {
 	@Test public void test10() { test(10); }
 	@Test public void test11() { test(11); }
 	@Test public void test12() { test(12); }
-	//@Test public void test13() { test(13); }
+	@Test public void test13() { test(13); }
+	@Test public void test14() { test(14); }
+	@Test public void test15() { test(15); }
+	@Test public void test16() { test(16); }
+	@Test public void test17() { test(16); }
 
 	private static final File BASE = new File("src/tests");
 
