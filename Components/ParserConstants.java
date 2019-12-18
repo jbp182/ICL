@@ -80,7 +80,13 @@ public interface ParserConstants {
   /** RegularExpression Id. */
   int COLON = 37;
   /** RegularExpression Id. */
-  int Id = 38;
+  int INT_T = 38;
+  /** RegularExpression Id. */
+  int BOOL_T = 39;
+  /** RegularExpression Id. */
+  int REF_T = 40;
+  /** RegularExpression Id. */
+  int Id = 41;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -125,6 +131,9 @@ public interface ParserConstants {
     "\"fun\"",
     "\"->\"",
     "\":\"",
+    "\"int\"",
+    "\"bool\"",
+    "\"ref\"",
     "<Id>",
   };
 

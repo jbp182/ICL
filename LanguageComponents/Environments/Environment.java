@@ -30,7 +30,7 @@ public class Environment<E> {
     
     public void assoc(String id, E val){
     	if (envMap.putIfAbsent(id, val) != null)
-    			throw new IdAlreadyExistsException("Error: Id " + id + " already exists.");
+    		throw new IdAlreadyExistsException("Error: Id " + id + " already exists.");
     }
     
     public Environment<E> beginScope(){

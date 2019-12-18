@@ -7,8 +7,16 @@ import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.*;
+import LanguageComponents.Nodes.ArithmeticOperators.*;
+import LanguageComponents.Nodes.FuncionalCore.*;
+import LanguageComponents.Nodes.ImperativeCore.*;
+import LanguageComponents.Nodes.LogicOperators.*;
+import LanguageComponents.Nodes.RelationalOperators.*;
+import LanguageComponents.Types.*;
 import java.io.FileInputStream;
 import java.io.File;
+import java.util.List;
+import java.util.LinkedList;
 
 public class Parser {
 
@@ -123,6 +131,12 @@ TOKEN :
   < IS: "->" >
   |
   < COLON: ":" >
+  |
+  < INT_T: "int" >
+  |
+  < BOOL_T: "bool" >
+  |
+  < REF_T: "ref" > 
   | 
   < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
 }
@@ -174,7 +188,7 @@ ASTNode EA() :
 ASTNode T() :
 { Token op;
   ASTNode f1, f2;
-  LinkedList al;}
+  List<ASTNode> al;}
 {
      f1=F() ( ( < LPAR > al=AL() < RPAR >
 				{ f1 = new ASTApply(f1, al); }
@@ -203,9 +217,9 @@ ASTNode T() :
 	{ return f1; }
 }
 
-LinkedList AL():
+List<ASTNode> AL():
 { ASTNode n;
-  LinkedList<ASTNode> args = new LinkedList(); }
+  List<ASTNode> args = new LinkedList(); }
 {
   ( n=EM()
   	{ args.add(n); }
@@ -216,23 +230,25 @@ LinkedList AL():
 }
 
 
-LinkedList PL():
-{ Token id, type;
-  LinkedList<ASTNode> ids_types = new LinkedList(); }
+void PL(List<String> ids, List<ASTType> types):
+{ Token id;
+  ASTType type; }
 {
-  (id=<Id><COLON > type=<Id>
-  		{ ids_types.add( new ASTId(id.image, type.image) ); }
-   	 ( id=< Id ><COLON > type=< Id > 
-  		{ ids_types.add( new ASTId(id.image, type.image) ); }
-  	 )* )?
-  	 { return ids_types; }
+  (id=<Id><COLON > type=getType()
+  		{ ids.add( id.image ); types.add( type ); }
+   	 ( id=< Id ><COLON > type=getType()
+  		{ ids.add( id.image ); types.add( type ); }
+  	 )*
+  )?
 }
 
 ASTNode F() :
-{ Token n, id, id1, id2; 
+{ Token n, id; 
   ASTNode t, init1, init2, body;
-  LinkedList<String> ids;
-  LinkedList<ASTNode> inits;}
+  ASTType type;
+  List<ASTNode> inits = new LinkedList();
+  List<String> ids = new LinkedList();
+  List<ASTType> types = new LinkedList();}
 {
     (  n=< Num >   {  t = new ASTNum(Integer.parseInt(n.image)); }
    | <LPAR> t=EM() <RPAR>
@@ -247,22 +263,49 @@ ASTNode F() :
    			{ t = new ASTWhile(t,body); }
    | < NOT > t=F()
    			{  t = new ASTNeg(t); }
-   | < LET > id1 = < Id > <EQ > init1=EM()
-   			{	ids = new LinkedList();
-   		  		inits = new LinkedList();
-   		  		ids.add(id1.image); inits.add(init1); }
-   		( < COMMA > id2 = < Id > <EQ > init2=EM()
-   			{ ids.add(id2.image); inits.add(init2); }
+   | < LET > id = < Id > <COLON> type=getType() <EQ > init1=EM()
+   			{	ids.add(id.image); types.add(type); inits.add(init1); }
+   		( < COMMA > id = < Id > <COLON> type=getType()  <EQ > init2=EM()
+   			{ ids.add(id.image); types.add(type); inits.add(init2); }
    		)*
    		< IN > body=EM() < END >
    		
-   		{ t = new ASTLet(ids, inits, body); }
-    | <FUN> inits=PL() <IS> body=EM() <END>
-    	{ t = new ASTFun(inits, body); }
+   		{ t = new ASTLet(ids, types, inits, body); }
+    | <FUN> PL(ids, types) <IS> body=EM() <END>
+		{ t = new ASTFun(ids, types, body); }
    	| id=< Id > { t = new ASTId( id.image ); }
    )
 
    { return t; }
+}
+
+
+ASTType getType() :
+{ ASTType t;
+  ASTType type;
+  List<ASTType> param = new LinkedList<ASTType>(); }
+{
+  (
+    < LPAR > t=getType()
+    		{ param.add(t); }
+    		
+    	( < COMMA > t=getType()
+			{ param.add(t); }
+			
+    	 )*
+    	 < RPAR > t=getType()
+    	 	{ type = ASTFunType.getInstance( param, t ); }
+    |
+    < REF_T > t=getType()
+    	{ type = ASTRefType.getInstance( t ); }
+    |
+    < INT_T >
+    	{ type = ASTIntType.getInstance(); }
+    |
+    < BOOL_T >
+    	{ type = ASTBoolType.getInstance(); }
+  )
+  { return type; }
 }
 
 

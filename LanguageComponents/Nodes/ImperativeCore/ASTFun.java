@@ -15,11 +15,11 @@ import java.util.List;
 
 public class ASTFun implements ASTNode {
 
-    private List<ASTNode> param;
+    private List<String> param;
     private ASTNode body;
     
-    public ASTFun(List<ASTNode> left, ASTNode body) {
-        this.param = left;
+    public ASTFun(List<String> ids, List<ASTType> types, ASTNode body) {
+        this.param = ids;
         this.body = body;
     }
 
