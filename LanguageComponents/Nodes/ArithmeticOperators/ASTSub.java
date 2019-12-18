@@ -9,10 +9,14 @@ import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.ASTNode;
 
 public class ASTSub implements ASTNode {
-	
+
+
 	private ASTNode left;
+	private ASTType leftType;
+
 	private ASTNode right;
-	
+	private ASTType rightType;
+
 	public ASTSub(ASTNode v1, ASTNode v2) {
 		left = v1;
 		right = v2;
@@ -37,6 +41,13 @@ public class ASTSub implements ASTNode {
 
 	@Override
 	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
-		return null;
+		leftType = left.typeCheck(env);
+		rightType = right.typeCheck(env);
+
+		if(!leftType.equals(rightType)){
+			throw new TypeError("Sub different Types Error");
+		}
+
+		return leftType;
 	}
 }

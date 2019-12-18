@@ -24,7 +24,9 @@ public class Parser {
   public static void main(String args[]) throws  Exception {
 
     if(args.length > 1 && args[0].equals("-f")){
+        CodeBlock.debug = false;
         compile(args[1]);
+        CodeBlock.runJava();
         return;
     }
 
@@ -47,6 +49,7 @@ public class Parser {
       Parser parser = new Parser(new FileInputStream(f));
       ASTNode exp = parser.Start();
       CodeBlock blk = new CodeBlock();
+      exp.typeCheck(new Environment<ASTType>(null));
       exp.compile(new CompilerEnvironment(null),blk);
       blk.dump("Main.j");
   }

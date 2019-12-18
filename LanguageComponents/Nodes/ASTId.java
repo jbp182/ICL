@@ -65,6 +65,6 @@ public class ASTId implements ASTNode {
 
 	@Override
 	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
-		return type;
+		return env.find(this.id);
 	}
 }

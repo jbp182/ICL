@@ -59,8 +59,19 @@ public class ASTLet implements ASTNode {
 		Environment<ASTType> newEnv = env.beginScope();
 		Iterator<String> itId = ids.iterator();
 		Iterator<ASTType> itType = types.iterator();
-		while ( itId.hasNext() && itType.hasNext() )
-			newEnv.assoc(itId.next(), itType.next() );
+		Iterator<ASTNode> itNodes = inits.iterator();
+
+		while ( itId.hasNext() && itType.hasNext() && itNodes.hasNext()) {
+			String id = itId.next();
+			ASTType type = itType.next();
+			ASTType nodeType = itNodes.next().typeCheck(env);
+
+			if(!type.equals(nodeType)){
+				throw new TypeError("Type Error");
+			}
+
+			newEnv.assoc(id, type);
+		}
 		
 		return body.typeCheck(newEnv);
 	}
@@ -68,7 +79,7 @@ public class ASTLet implements ASTNode {
 	private void genStoreValues(CodeBlock codeBlock, CompilerEnvironment env) {
 		Iterator<String> itId = ids.iterator();
 		Iterator<ASTNode> itInit = inits.iterator();
-		while( ids.size() > 0 && inits.size() > 0 ) {
+		while( itId.hasNext() && itInit.hasNext()) {
 			codeBlock.emit("aload 4");
 			ASTNode node = itInit.next();
 			String id = itId.next();

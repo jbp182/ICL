@@ -10,8 +10,12 @@ import LanguageComponents.Nodes.ASTNode;
 
 public class ASTMul implements ASTNode {
 
+
 	private ASTNode left;
+	private ASTType leftType;
+
 	private ASTNode right;
+	private ASTType rightType;
 	
 	public ASTMul(ASTNode v1, ASTNode v2) {
 		left = v1;
@@ -37,6 +41,13 @@ public class ASTMul implements ASTNode {
 
 	@Override
 	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
-		return null;
+		leftType = left.typeCheck(env);
+		rightType = right.typeCheck(env);
+
+		if(!leftType.equals(rightType)){
+			throw new TypeError("Mul different Types Error");
+		}
+
+		return leftType;
 	}
 }

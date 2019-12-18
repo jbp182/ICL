@@ -63,7 +63,8 @@ public class CodeBlock {
         out.flush();
         out.close();
 
-        System.out.println("Generated: " + f.getPath());
+        if(debug)
+            System.out.println("Generated: " + f.getPath());
     }
 
     private boolean isRef(String id){
@@ -71,7 +72,7 @@ public class CodeBlock {
     }
 
     private void genClassForRef(String name, String subtype) throws IOException {
-        File f = new File("./target/ref_int.j");
+        File f = new File("./target/"+subtype+".j");
         f.createNewFile();
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
         out.flush();
@@ -145,7 +146,11 @@ public class CodeBlock {
     private void compileJ(){
         try {
             for (final File fileEntry : (new File("./target")).listFiles()) {
-                runProcess("java -jar ./src/ResourceFiles/jasmin.jar -d ./target ./target/"+fileEntry.getName());
+                String comm = "java -jar ./src/ResourceFiles/jasmin.jar -d ./target ./target/"+fileEntry.getName();
+                if(debug)
+                    runProcess(comm);
+                else
+                    runProcessWihoutOutput(comm);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -156,6 +161,11 @@ public class CodeBlock {
         Process pro = Runtime.getRuntime().exec(command);
         printLines(pro.getInputStream());
         printLines(pro.getErrorStream());
+        pro.waitFor();
+    }
+
+    private static void runProcessWihoutOutput(String command) throws Exception {
+        Process pro = Runtime.getRuntime().exec(command);
         pro.waitFor();
     }
 
@@ -181,7 +191,7 @@ public class CodeBlock {
     }
 
     public static void runJava() throws Exception {
-        runProcess("java Main");
+        runProcess("java -cp ./target Main");
     }
 
 }

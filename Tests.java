@@ -77,7 +77,7 @@ public class Tests {
 		try {
 			Locale.setDefault(Locale.US);
 			Parser.main(new String[] {"-f",input.getPath()});
-			Parser.ReInit(System.in);
+			//Parser.ReInit(System.in);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Erro no programa");
@@ -91,13 +91,6 @@ public class Tests {
 
 	private static String removeCarriages(String s) {
 		return s.replaceAll("\r\n", "\n");
-	}
-
-	public static String relative( final File base, final File file ) {
-		final int rootLength = base.getAbsolutePath().length();
-		final String absFileName = file.getAbsolutePath();
-		final String relFileName = absFileName.substring(rootLength + 1);
-		return relFileName;
 	}
 
 }

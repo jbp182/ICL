@@ -16,8 +16,8 @@ public abstract class ASTType {
 				return ASTIntType.getInstance();
 			case BOOL:
 				return ASTBoolType.getInstance();
-			case FUN:
-				return ASTFunType.getInstance();
+			//case FUN:
+			//	return ASTFunType.getInstance();
 			default:
 				throw new TypeError("No such type exception.");
 		}

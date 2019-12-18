@@ -11,7 +11,10 @@ import LanguageComponents.Nodes.ASTNode;
 public class ASTDiv implements ASTNode {
 
 	private ASTNode left;
+	private ASTType leftType;
+
 	private ASTNode right;
+	private ASTType rightType;
 	
 	public ASTDiv(ASTNode v1, ASTNode v2) {
 		left = v1;
@@ -37,6 +40,13 @@ public class ASTDiv implements ASTNode {
 
 	@Override
 	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
-		return null;
+		leftType = left.typeCheck(env);
+		rightType = right.typeCheck(env);
+
+		if(!leftType.equals(rightType)){
+			throw new TypeError("Div different Types Error");
+		}
+
+		return leftType;
 	}
 }

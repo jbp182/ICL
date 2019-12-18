@@ -44,6 +44,6 @@ public class ASTDeref implements ASTNode {
             throw new TypeError("Not a reference");
         }
 
-        return rightType;
+        return ((ASTRefType) rightType).getType();
     }
 }

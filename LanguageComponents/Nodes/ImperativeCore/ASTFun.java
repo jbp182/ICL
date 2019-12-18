@@ -25,7 +25,8 @@ public class ASTFun implements ASTNode {
 
     @Override
     public IValue eval(Environment<IValue> env) {
-       return new VClosure(param,body,env);
+       //return new VClosure(param,body,env);
+        return null ;//TODO
     }
 
     @Override
