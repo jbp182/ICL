@@ -33,7 +33,13 @@ public class ASTDeref implements ASTNode {
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
         right.compile(env,codeBlock);
         codeBlock.emit("checkcast " + rightType);
-        codeBlock.emit("getfield "+ rightType +"/v "+((ASTRefType)rightType).getType());
+
+        ASTType subtype = ((ASTRefType)rightType).getType();
+
+        if(subtype instanceof ASTRefType)
+            codeBlock.emit("getfield "+ rightType +"/v L"+subtype+";");
+        else
+            codeBlock.emit("getfield "+ rightType +"/v "+subtype);
     }
 
     @Override

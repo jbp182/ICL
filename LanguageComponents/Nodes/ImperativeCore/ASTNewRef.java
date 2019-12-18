@@ -28,14 +28,20 @@ public class ASTNewRef implements ASTNode {
 
     @Override
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
-        codeBlock.buildRefIfDoesNotExist("ref_"+rightType.toString());
+        codeBlock.buildRefIfDoesNotExist(ASTRefType.getInstance(rightType));
 
         codeBlock.emit("new ref_"+rightType);
         codeBlock.emit("dup");
         codeBlock.emit("invokespecial ref_"+ rightType +"/<init>()V");
         codeBlock.emit("dup");
         right.compile(env,codeBlock);
-        codeBlock.emit("putfield ref_"+rightType+"/v "+rightType);
+
+        if(rightType instanceof ASTRefType){
+            codeBlock.emit("putfield ref_"+rightType+"/v L"+rightType+";");
+        }else{
+            codeBlock.emit("putfield ref_"+rightType+"/v "+rightType);
+        }
+
     }
 
     @Override

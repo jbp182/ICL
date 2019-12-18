@@ -1,5 +1,6 @@
 package LanguageComponents.Environments;
 
+import LanguageComponents.Types.ASTRefType;
 import LanguageComponents.Types.ASTType;
 
 import java.io.*;
@@ -82,17 +83,22 @@ public class CodeBlock {
         return id.charAt(0) == 'r';
     }
 
-    private void genClassForRef(String name, String subtype) throws IOException {
-        File f = new File("./target/"+subtype+".j");
+    private void genClassForRef(ASTType type) throws IOException {
+        File f = new File("./target/"+type+".j");
         f.createNewFile();
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
         out.flush();
 
-
-        out.write(".class "+name+"\n");
+        out.write(".class "+type+"\n");
         out.write(".super java/lang/Object\n");
 
-        out.write(".field public v "+subtype+"\n");
+        ASTType subtype = ((ASTRefType)type).getType();
+
+        if(subtype instanceof ASTRefType){
+            out.write(".field public v L"+subtype+";\n");
+        }else{
+            out.write(".field public v "+subtype+"\n");
+        }
 
 
         out.write(".method public <init>()V\n");
@@ -193,9 +199,9 @@ public class CodeBlock {
         return builder.toString();
     }
 
-    public void buildRefIfDoesNotExist(String name) {
+    public void buildRefIfDoesNotExist(ASTType type) {
         try {
-            genClassForRef(name,name.replaceFirst("ref_",""));
+            genClassForRef(type);
         } catch (IOException e) {
             e.printStackTrace();
         }

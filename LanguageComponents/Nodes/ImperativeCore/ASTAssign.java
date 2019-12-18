@@ -49,8 +49,14 @@ public class ASTAssign implements ASTNode {
         codeBlock.emit("checkcast "+leftType);
         codeBlock.emit("dup");
         right.compile(env,codeBlock);
-        codeBlock.emit("putfield "+leftType+"/v "+rightType);
-        codeBlock.emit("getfield "+leftType+"/v "+ rightType);
+        if(rightType instanceof ASTRefType){
+            codeBlock.emit("putfield "+leftType+"/v L"+rightType+";");
+            codeBlock.emit("getfield "+leftType+"/v L"+ rightType+";");
+        }else{
+            codeBlock.emit("putfield "+leftType+"/v "+rightType);
+            codeBlock.emit("getfield "+leftType+"/v "+ rightType);
+        }
+
     }
 
     @Override
