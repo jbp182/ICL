@@ -82,9 +82,6 @@ public class CodeBlock {
             System.out.println("Generated: " + f.getPath());
     }
 
-    private boolean isRef(String id){
-        return id.charAt(0) == 'r';
-    }
 
     private void genClassForRef(ASTType type) throws IOException {
         File f = new File("./target/"+type+".j");
@@ -236,7 +233,7 @@ public class CodeBlock {
         }
 
         while(it.hasNext()){
-            builder.append(";");
+            //builder.append(";");
             builder.append(it.next());
         }
 
@@ -289,7 +286,7 @@ public class CodeBlock {
             builder.append(it.next());
         }
         while(it.hasNext()){
-            builder.append(";");
+            //builder.append(";");
             builder.append(it.next());
         }
 
@@ -303,8 +300,8 @@ public class CodeBlock {
         out.write("dup\n");
         out.write("aload 0\n");
         out.write("getfield " + id+"/sl L"+ env.getAncestor() +";\n"); //todo suport 0 frames
-        out.write("putfield " + env+"_frame/sl L"+ env.getAncestor() +";\n");
-        out.write("astore 2\n");
+        out.write("putfield " + env+"/sl L"+ env.getAncestor() +";\n");
+        out.write("astore 4\n");
 
         int i = 1;
         it = typeList.iterator();
@@ -312,9 +309,14 @@ public class CodeBlock {
         while(it.hasNext() && itId.hasNext()){
             ASTType t = it.next();
             String d = itId.next();
-            out.write("aload 2\n");
+            out.write("aload 4\n");
             out.write("iload "+ i++ + "\n");
-            out.write("putfield " + env + "/" + d + " " + t + "\n"); //todo support compost objects
+
+            if(t instanceof CompostType)
+                out.write("putfield " + env + "/" + d + " L" + t + ";\n");
+            else{
+                out.write("putfield " + env + "/" + d + " " + t + "\n");
+            }
         }
 
         StringBuilder builderTmp = this.builder;

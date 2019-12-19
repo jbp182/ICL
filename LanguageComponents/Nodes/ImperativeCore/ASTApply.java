@@ -53,12 +53,9 @@ public class ASTApply implements ASTNode {
 		ASTFunType fun = ((ASTFunType)funType);
 		funName.compile(env,codeBlock);
 
-		codeBlock.emit("checkcast "+funType);
-
 		for(ASTNode node : args){
 			node.compile(env,codeBlock);
 		}
-
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("/call(");
@@ -67,7 +64,6 @@ public class ASTApply implements ASTNode {
 			builder.append(it.next());
 		}
 		while(it.hasNext()){
-			builder.append(";");
 			builder.append(it.next());
 		}
 

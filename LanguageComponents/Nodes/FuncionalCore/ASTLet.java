@@ -3,6 +3,7 @@ package LanguageComponents.Nodes.FuncionalCore;
 import Exceptions.TypeError;
 import LanguageComponents.Nodes.ImperativeCore.ASTNewRef;
 import LanguageComponents.Types.ASTType;
+import LanguageComponents.Types.CompostType;
 import LanguageComponents.Values.IValue;
 
 import java.util.Iterator;
@@ -89,7 +90,7 @@ public class ASTLet implements ASTNode {
 			node.compile(env, codeBlock);
 
 			String compileId;
-			if(isRef(node)) {
+			if(type instanceof CompostType) {
 				compileId =  IdGenerator.genRefName();
 				codeBlock.emit("putfield " + env + "/" +compileId + " L"+type+";");
 			}else{
@@ -98,10 +99,6 @@ public class ASTLet implements ASTNode {
 			}
 			env.assoc(id, compileId);
 		}
-	}
-
-	private boolean isRef(ASTNode node){
-		return node instanceof ASTNewRef;
 	}
 
 }

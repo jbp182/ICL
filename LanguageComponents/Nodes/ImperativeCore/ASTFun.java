@@ -39,24 +39,26 @@ public class ASTFun implements ASTNode {
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
         //TODO
         List<String> genIds = new LinkedList<>();
-        env = env.beginScope(codeBlock);
+        env = env.beginScope(codeBlock,false);
         for(String paramID : paramIds){
             String id = IdGenerator.genLabels();
             genIds.add(id);
             env.assoc(paramID,id);
         }
         String id = IdGenerator.genFunctionId();
-        createCloser(codeBlock,id);
+        createCloser(codeBlock,id,env);
         codeBlock.createFunClass(id,body,funType,this.paramTypes,env,genIds);
-        env = env.endScope(codeBlock,paramIds,paramTypes);
+        env = env.endScope(codeBlock,paramIds,paramTypes,false);
 
     }
 
-    private void createCloser(CodeBlock codeBlock,String id){
+    private void createCloser(CodeBlock codeBlock,String id,CompilerEnvironment env){
         codeBlock.emit("new " + id);
         codeBlock.emit("dup");
+        codeBlock.emit("invokespecial "+id+"/<init>()V");
+        codeBlock.emit("dup");
         codeBlock.emit("aload 4");
-        codeBlock.emit("putfield "+id+"/SL L"+funType+";");
+        codeBlock.emit("putfield "+id+"/sl L"+env.getAncestor()+";");
         codeBlock.buildFunInterfaceIfDoesNotExist(funType);
     }
 

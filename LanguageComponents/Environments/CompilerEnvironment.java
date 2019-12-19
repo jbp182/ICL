@@ -54,9 +54,15 @@ public class CompilerEnvironment {
 
 
     public CompilerEnvironment beginScope(CodeBlock blk){
+        return beginScope(blk,true);
+    }
+
+    public CompilerEnvironment beginScope(CodeBlock blk,boolean write){
         CompilerEnvironment env = new CompilerEnvironment(this);
         this.predecessor = env;
-        genNewObject(blk,env);
+
+        if(write)
+            genNewObject(blk,env);
         return env;
     }
 
@@ -83,6 +89,10 @@ public class CompilerEnvironment {
     }
 
     public CompilerEnvironment endScope(CodeBlock blk, List<String> ids, List<ASTType> types){
+        return endScope(blk,ids,types,true);
+    }
+
+    public CompilerEnvironment endScope(CodeBlock blk, List<String> ids, List<ASTType> types,boolean write){
         List<String> convertedIds = new LinkedList<>();
 
         for(String id : ids){
@@ -91,13 +101,15 @@ public class CompilerEnvironment {
 
         blk.genClass(this,convertedIds,types);
 
-        blk.emit("aload 4");
-        if(frameName.equals("f0"))
-            blk.emit("getfield "+frameName + "/sl Ljava/lang/Object;");
-        else
-            blk.emit("getfield "+frameName + "/sl L"+ancestor.frameName + ";");
+        if(write) {
+            blk.emit("aload 4");
+            if (frameName.equals("f0"))
+                blk.emit("getfield " + frameName + "/sl Ljava/lang/Object;");
+            else
+                blk.emit("getfield " + frameName + "/sl L" + ancestor.frameName + ";");
 
-        blk.emit("astore 4");
+            blk.emit("astore 4");
+        }
         ancestor.predecessor = null;
         return ancestor;
     }
