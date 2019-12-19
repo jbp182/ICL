@@ -71,7 +71,7 @@ public class CompilerEnvironment {
         codeBlock.emit("dup");
         codeBlock.emit("invokespecial "+env+"/<init>()V");
         codeBlock.emit("dup");
-        codeBlock.emit("aload 4");
+        codeBlock.emit("aload 9");
 
 
         if(env.toString().equals("f0"))
@@ -84,7 +84,7 @@ public class CompilerEnvironment {
          //   codeBlock.emit("putfield "+  "f1/x2 LI_I;");
 
 
-        codeBlock.emit("astore 4");
+        codeBlock.emit("astore 9");
 
     }
 
@@ -102,13 +102,13 @@ public class CompilerEnvironment {
         blk.genClass(this,convertedIds,types);
 
         if(write) {
-            blk.emit("aload 4");
+            blk.emit("aload 9");
             if (frameName.equals("f0"))
                 blk.emit("getfield " + frameName + "/sl Ljava/lang/Object;");
             else
                 blk.emit("getfield " + frameName + "/sl L" + ancestor.frameName + ";");
 
-            blk.emit("astore 4");
+            blk.emit("astore 9");
         }
         ancestor.predecessor = null;
         return ancestor;

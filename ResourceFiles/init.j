@@ -25,4 +25,4 @@
 
 	; initialize frame pointer SL stored in local #4 to null
 	aconst_null
-	astore 4
+	astore 9

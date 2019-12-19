@@ -34,7 +34,7 @@ public class ASTId implements ASTNode {
 	public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
 		CompilerPair pair = env.find(id);
 
-		codeBlock.emit("aload 4");
+		codeBlock.emit("aload 9");
 		if(env.getPredecessor() != null)
 			imitGetField(env.getPredecessor(),codeBlock);
 

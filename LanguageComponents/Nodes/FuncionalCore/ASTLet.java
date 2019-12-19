@@ -83,7 +83,7 @@ public class ASTLet implements ASTNode {
 		Iterator<ASTType> itType = types.iterator();
 
 		while( itId.hasNext() && itInit.hasNext() && itType.hasNext()) {
-			codeBlock.emit("aload 4");
+			codeBlock.emit("aload 9");
 			ASTNode node = itInit.next();
 			ASTType type = itType.next();
 			String id = itId.next();

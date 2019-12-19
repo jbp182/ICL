@@ -57,7 +57,7 @@ public class ASTFun implements ASTNode {
         codeBlock.emit("dup");
         codeBlock.emit("invokespecial "+id+"/<init>()V");
         codeBlock.emit("dup");
-        codeBlock.emit("aload 4");
+        codeBlock.emit("aload 9");
         codeBlock.emit("putfield "+id+"/sl L"+env.getAncestor()+";");
         codeBlock.buildFunInterfaceIfDoesNotExist(funType);
     }

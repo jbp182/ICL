@@ -301,7 +301,7 @@ public class CodeBlock {
         out.write("aload 0\n");
         out.write("getfield " + id+"/sl L"+ env.getAncestor() +";\n"); //todo suport 0 frames
         out.write("putfield " + env+"/sl L"+ env.getAncestor() +";\n");
-        out.write("astore 4\n");
+        out.write("astore 9\n");
 
         int i = 1;
         it = typeList.iterator();
@@ -309,7 +309,7 @@ public class CodeBlock {
         while(it.hasNext() && itId.hasNext()){
             ASTType t = it.next();
             String d = itId.next();
-            out.write("aload 4\n");
+            out.write("aload 9\n");
             out.write("iload "+ i++ + "\n");
 
             if(t instanceof CompostType)
