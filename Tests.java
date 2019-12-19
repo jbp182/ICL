@@ -40,6 +40,8 @@ public class Tests {
 	@Test public void test20() { test(20); }
 	@Test public void test21() { test(21); }
 	@Test public void test22() { test(22); }
+	@Test public void test23() { test(23); }
+	@Test public void test24() { test(24); }
 
 	private static final File BASE = new File("src/tests");
 

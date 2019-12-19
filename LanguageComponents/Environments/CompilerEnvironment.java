@@ -80,10 +80,6 @@ public class CompilerEnvironment {
             codeBlock.emit("putfield "+  env+"/sl L"+ env.ancestor + ";");
 
 
-       // if(env.toString().equals("f2"))
-         //   codeBlock.emit("putfield "+  "f1/x2 LI_I;");
-
-
         codeBlock.emit("astore 9");
 
     }
