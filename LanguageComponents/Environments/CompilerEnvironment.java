@@ -12,6 +12,7 @@ public class CompilerEnvironment {
     private CompilerEnvironment predecessor;
     private Map<String, String> envMap;
 
+
     public CompilerEnvironment(CompilerEnvironment env) {
         this.frameName = IdGenerator.genFrameName();
         this.ancestor = env;
@@ -25,6 +26,7 @@ public class CompilerEnvironment {
     public CompilerEnvironment getPredecessor() {
         return predecessor;
     }
+
 
     public CompilerPair find(String id){
         String val = envMap.get(id);
@@ -70,6 +72,11 @@ public class CompilerEnvironment {
             codeBlock.emit("putfield "+  env+"/sl Ljava/lang/Object;");
         else
             codeBlock.emit("putfield "+  env+"/sl L"+ env.ancestor + ";");
+
+
+       // if(env.toString().equals("f2"))
+         //   codeBlock.emit("putfield "+  "f1/x2 LI_I;");
+
 
         codeBlock.emit("astore 4");
 

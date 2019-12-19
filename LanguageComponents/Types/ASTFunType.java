@@ -3,7 +3,7 @@ package LanguageComponents.Types;
 import java.util.Iterator;
 import java.util.List;
 
-public class ASTFunType extends ASTType {
+public class ASTFunType extends CompostType {
 	
 	private List<ASTType> paramTypes;
 	private ASTType returnType;

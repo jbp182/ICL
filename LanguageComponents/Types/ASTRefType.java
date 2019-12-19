@@ -1,7 +1,7 @@
 package LanguageComponents.Types;
 
 
-public class ASTRefType extends ASTType {
+public class ASTRefType extends CompostType {
 	
 	private ASTType type;
 	

@@ -34,7 +34,8 @@ public class Tests {
 	@Test public void test14() { test(14); }
 	@Test public void test15() { test(15); }
 	@Test public void test16() { test(16); }
-	@Test public void test17() { test(16); }
+	@Test public void test17() { test(17); }
+	@Test public void test18() { test(18); }
 
 	private static final File BASE = new File("src/tests");
 

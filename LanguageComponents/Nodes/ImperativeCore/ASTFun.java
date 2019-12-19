@@ -12,6 +12,7 @@ import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VClosure;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -37,17 +38,25 @@ public class ASTFun implements ASTNode {
     @Override
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
         //TODO
+        List<String> genIds = new LinkedList<>();
+        env = env.beginScope(codeBlock);
+        for(String paramID : paramIds){
+            String id = IdGenerator.genLabels();
+            genIds.add(id);
+            env.assoc(paramID,id);
+        }
         String id = IdGenerator.genFunctionId();
         createCloser(codeBlock,id);
-        codeBlock.createFunClass(id,body,funType,this.paramTypes,env);
+        codeBlock.createFunClass(id,body,funType,this.paramTypes,env,genIds);
+        env = env.endScope(codeBlock,paramIds,paramTypes);
+
     }
 
     private void createCloser(CodeBlock codeBlock,String id){
         codeBlock.emit("new " + id);
         codeBlock.emit("dup");
         codeBlock.emit("aload 4");
-        codeBlock.emit("putfield "+id+"SL L"+funType+";");
-
+        codeBlock.emit("putfield "+id+"/SL L"+funType+";");
         codeBlock.buildFunInterfaceIfDoesNotExist(funType);
     }
 

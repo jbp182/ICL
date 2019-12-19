@@ -4,6 +4,7 @@ import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Types.ASTFunType;
 import LanguageComponents.Types.ASTRefType;
 import LanguageComponents.Types.ASTType;
+import LanguageComponents.Types.CompostType;
 
 import java.io.*;
 import java.util.Iterator;
@@ -62,7 +63,7 @@ public class CodeBlock {
             String id = idsIt.next();
             ASTType astType = typesIt.next();
 
-            if(isRef(id)){
+            if(astType instanceof CompostType){
                 out.write(".field public " +id+" L"+astType+";\n");
             }else{
                 out.write(".field public " +id+" I\n");
@@ -225,9 +226,10 @@ public class CodeBlock {
         out.flush();
 
         out.write(".interface "+type+"\n");
+        out.write(".super java/lang/Object\n");
 
         StringBuilder builder = new StringBuilder();
-        builder.append(".method (");
+        builder.append(".method public abstract call(");
         Iterator<ASTType> it = type.getParamTypes().iterator();
         if(it.hasNext()){
             builder.append(it.next());
@@ -240,34 +242,48 @@ public class CodeBlock {
 
         builder.append(")"+type.getReturnType());
 
-        out.write(builder.toString());
-        out.write(".end");
+        out.write(builder.toString()+"\n");
+        out.write("return\n");
+        out.write(".end method");
         if(debug)
             System.out.println("Generated: " + f.getPath());
+
+        out.flush();
     }
 
-    public void createFunClass(String id, ASTNode body,ASTFunType type,List<ASTType> typeList,CompilerEnvironment env){
+    public void createFunClass(String id, ASTNode body,ASTFunType type,List<ASTType> typeList,CompilerEnvironment env,List<String> ids){
         try {
-            createFunClassWithException(id,body,type,typeList,env);
+            createFunClassWithException(id,body,type,typeList,env,ids);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     //TODO
-    private void createFunClassWithException(String id, ASTNode body, ASTFunType type ,List<ASTType> typeList,CompilerEnvironment env) throws IOException {
+    private void createFunClassWithException(String id, ASTNode body, ASTFunType type ,List<ASTType> typeList,CompilerEnvironment env,List<String> ids) throws IOException {
         File f = new File("./target/"+id+".j");
         f.createNewFile();
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
         out.flush();
 
-        out.write(".class " + id);
-        out.write(".implements "+type);
-        out.write(".field public SL "+env+";");
-        out.write(".locals k + 1");
+        out.write(".class " + id + "\n");
+        out.write(".super java/lang/Object\n");
+        out.write(".implements "+type + "\n");
+
+        if(env.getAncestor() != null)
+            out.write(".field public sl L"+env.getAncestor()+";" + "\n");
+        else
+            out.write(".field public sl Ljava/lang/Object;\n");
+
+
+        out.write("\n.method public <init>()V\n");
+        out.write("\taload_0\n");
+        out.write("\tinvokenonvirtual java/lang/Object/<init>()V\n");
+        out.write("\treturn\n");
+        out.write(".end method\n");
 
         StringBuilder builder = new StringBuilder();
-        builder.append(".method call(");
+        builder.append("\n.method public call(");
         Iterator<ASTType> it = type.getParamTypes().iterator();
         if(it.hasNext()){
             builder.append(it.next());
@@ -277,30 +293,42 @@ public class CodeBlock {
             builder.append(it.next());
         }
 
-        out.write(builder.toString());
-        out.write("new "+id +"_frame");
-        out.write("dup");
+        out.write(builder.toString() + ")"+type.getReturnType()+"\n");
 
-        int i = 0;
-        for(ASTType t : typeList){
-            out.write("aload "+i++);
-            out.write("getfield " + id + "/SL "+t);
-            out.write("putfield " + id +"_frame/sl" + t);
-            out.write("dup");
+        out.write("\n.limit locals 10\n" + ".limit stack 256\n\n\n");
+
+        out.write("\nnew "+env +"\n");
+        out.write("dup\n");
+        out.write("invokespecial "+ env +"/<init>()V\n");
+        out.write("dup\n");
+        out.write("aload 0\n");
+        out.write("getfield " + id+"/sl L"+ env.getAncestor() +";\n"); //todo suport 0 frames
+        out.write("putfield " + env+"_frame/sl L"+ env.getAncestor() +";\n");
+        out.write("astore 2\n");
+
+        int i = 1;
+        it = typeList.iterator();
+        Iterator<String> itId = ids.iterator();
+        while(it.hasNext() && itId.hasNext()){
+            ASTType t = it.next();
+            String d = itId.next();
+            out.write("aload 2\n");
+            out.write("iload "+ i++ + "\n");
+            out.write("putfield " + env + "/" + d + " " + t + "\n"); //todo support compost objects
         }
 
-        out.write("astore SL");
         StringBuilder builderTmp = this.builder;
         this.builder = new StringBuilder();
 
         body.compile(env,this);
 
-        out.write(this.builder.toString());
+        out.write(this.builder.toString() + "\n");
 
         this.builder = builderTmp;
 
-        out.write("return");
-        out.write(".end");
+        out.write(" ireturn\n");
+        out.write(".end method" + "\n");
+        out.flush();
     }
 
 

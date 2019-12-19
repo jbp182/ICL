@@ -86,7 +86,7 @@ public class ASTLet implements ASTNode {
 			ASTNode node = itInit.next();
 			ASTType type = itType.next();
 			String id = itId.next();
-			node.compile(env.getAncestor(), codeBlock);
+			node.compile(env, codeBlock);
 
 			String compileId;
 			if(isRef(node)) {

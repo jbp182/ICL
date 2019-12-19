@@ -15,7 +15,9 @@ import LanguageComponents.Values.VClosure;
 
 public class ASTApply implements ASTNode {
 	
-	private ASTNode funName;		// id que tem la dentro o VClosure
+	private ASTNode funName;
+	private ASTType funType;
+
 	private List<ASTNode> args;
 	
 	public ASTApply(ASTNode funName, List<ASTNode> args) {
@@ -48,13 +50,35 @@ public class ASTApply implements ASTNode {
 
 	@Override
 	public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
-		// TODO Auto-generated method stub
+		ASTFunType fun = ((ASTFunType)funType);
+		funName.compile(env,codeBlock);
 
+		codeBlock.emit("checkcast "+funType);
+
+		for(ASTNode node : args){
+			node.compile(env,codeBlock);
+		}
+
+
+		StringBuilder builder = new StringBuilder();
+		builder.append("/call(");
+		Iterator<ASTType> it = fun.getParamTypes().iterator();
+		if(it.hasNext()){
+			builder.append(it.next());
+		}
+		while(it.hasNext()){
+			builder.append(";");
+			builder.append(it.next());
+		}
+
+		builder.append(")"+ fun.getReturnType() + " " + (fun.getParamTypes().size() + 1));
+
+		codeBlock.emit("invokeinterface "+ funType + builder.toString());
 	}
 
 	@Override
 	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
-		ASTType funType = funName.typeCheck(env);
+		funType = funName.typeCheck(env);
 		if (funType instanceof ASTFunType) {
 			ASTFunType t = (ASTFunType) funType;
 			

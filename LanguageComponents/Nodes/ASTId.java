@@ -1,4 +1,7 @@
 package LanguageComponents.Nodes;
+import LanguageComponents.Types.ASTFunType;
+import LanguageComponents.Types.ASTRefType;
+import LanguageComponents.Types.CompostType;
 import LanguageComponents.Values.IValue;
 import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
@@ -37,11 +40,11 @@ public class ASTId implements ASTNode {
 
 		CompilerEnvironment tmp = env;
 		for(int i = 0 ; i < pair.offset;i++){
-			imitGetField(env,codeBlock);
+			imitGetField(tmp,codeBlock);
 			tmp = tmp.getAncestor();
 		}
 
-		if(isRef(pair.variableId)) {
+		if(type instanceof CompostType) {
 			codeBlock.emit("getfield " + pair.frameId + "/" + pair.variableId + " L"+type+";");
 		}
 		else
@@ -50,10 +53,6 @@ public class ASTId implements ASTNode {
 
 	private void imitGetField(CompilerEnvironment env, CodeBlock codeBlock){
 		codeBlock.emit("getfield "+env+"/sl L"+env.getAncestor()+";");
-	}
-
-	private boolean isRef(String id){
-		return id.charAt(0) == 'r';
 	}
 
 	@Override
