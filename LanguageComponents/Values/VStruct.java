@@ -3,7 +3,6 @@ package LanguageComponents.Values;
 
 import java.util.Map;
 
-//TODO
 public class VStruct implements IValue {
 
     private Map<String, IValue> structAsMap;

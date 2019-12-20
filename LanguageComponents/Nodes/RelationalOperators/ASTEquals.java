@@ -11,7 +11,6 @@ import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VBool;
 
-//TODO
 public class ASTEquals implements ASTNode {
 
     private ASTNode left;
@@ -28,7 +27,7 @@ public class ASTEquals implements ASTNode {
 
     @Override
     public IValue eval(Environment<IValue> env) {
-    	boolean res = left.eval(env) == right.eval(env);		// implementamos um equals nos no's ??
+    	boolean res = left.eval(env) == right.eval(env);
     	return new VBool( res );
     }
 

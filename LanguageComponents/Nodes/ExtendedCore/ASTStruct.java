@@ -6,7 +6,6 @@ import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
 import LanguageComponents.Environments.IdGenerator;
 import LanguageComponents.Nodes.ASTNode;
-import LanguageComponents.Types.ASTStringType;
 import LanguageComponents.Types.ASTStructType;
 import LanguageComponents.Types.ASTType;
 import LanguageComponents.Types.CompostType;
@@ -15,7 +14,6 @@ import LanguageComponents.Values.VStruct;
 
 import java.util.*;
 
-//TODO
 public class ASTStruct implements ASTNode {
 
     private Map<String,ASTNode> structAsMap;

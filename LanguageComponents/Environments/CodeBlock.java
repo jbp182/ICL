@@ -257,7 +257,6 @@ public class CodeBlock {
         }
     }
 
-    //TODO
     private void createFunClassWithException(String id, ASTNode body, ASTFunType type ,List<ASTType> typeList,CompilerEnvironment env,List<String> ids) throws IOException {
         File f = new File("./target/"+id+".j");
         f.createNewFile();
@@ -287,7 +286,6 @@ public class CodeBlock {
             builder.append(it.next());
         }
         while(it.hasNext()){
-            //builder.append(";");
             builder.append(it.next());
         }
 

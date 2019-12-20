@@ -13,7 +13,6 @@ import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VBool;
 import LanguageComponents.Values.VInt;
 
-//TODO
 public class ASTLower implements ASTNode {
 
     private ASTNode left;
