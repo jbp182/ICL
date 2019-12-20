@@ -22,3 +22,5 @@ Estes testes estão disponíveis em ./tests
 $in.icl -> Input do compilador
 
 $out.icl -> Output Esperado do compilador
+
+(Para correr é necessário que o compilador não esteja em modo de debug)

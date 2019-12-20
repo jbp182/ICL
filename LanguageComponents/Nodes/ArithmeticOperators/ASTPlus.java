@@ -34,9 +34,21 @@ public class ASTPlus implements ASTNode {
 
 	@Override
 	public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
+		if(leftType instanceof ASTIntType){
+			compileInt(env, codeBlock);
+		}else{
+			compileStruct(env,codeBlock);
+		}
+	}
+
+	private void compileInt(CompilerEnvironment env, CodeBlock codeBlock){
 		left.compile(env,codeBlock);
 		right.compile(env,codeBlock);
 		codeBlock.emit("iadd");
+	}
+
+	private void compileStruct(CompilerEnvironment env, CodeBlock codeBlock){
+
 	}
 
 	@Override
@@ -49,6 +61,5 @@ public class ASTPlus implements ASTNode {
 			return leftType;
 		
 		throw new TypeError("Not an int. Cannot add.");
-
 	}
 }

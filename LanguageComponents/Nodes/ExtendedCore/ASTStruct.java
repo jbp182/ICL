@@ -22,6 +22,7 @@ public class ASTStruct implements ASTNode {
     private Map<String,ASTType> structTypes;
     private ASTType structType;
 
+
     public ASTStruct(Map<String,ASTNode> structAsMap, Map<String,ASTType> structTypes){
         this.structAsMap = structAsMap;
         this.structTypes = structTypes;
