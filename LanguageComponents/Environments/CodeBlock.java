@@ -9,6 +9,7 @@ import LanguageComponents.Types.CompostType;
 import java.io.*;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class CodeBlock {
     private StringBuilder builder;
@@ -344,4 +345,47 @@ public class CodeBlock {
         runProcess("java -cp ./target Main");
     }
 
+    public void buildStruct(ASTType type, Map<String, ASTNode> structAsMap, Map<String,ASTType> structTypes) {
+        try {
+            buildStructWithExceptions(type,structAsMap,structTypes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void buildStructWithExceptions(ASTType type, Map<String, ASTNode> structAsMap, Map<String,ASTType> structTypes) throws IOException {
+        File f = new File("./target/"+type+".j");
+        f.createNewFile();
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
+        out.flush();
+
+        out.write(".class " + type + "\n");
+        out.write(".super java/lang/Object\n");
+
+
+        Iterator<Map.Entry<String,ASTType>> typeIt = structTypes.entrySet().iterator();
+        Iterator<Map.Entry<String,ASTNode>> nodeIt = structAsMap.entrySet().iterator();
+
+        while(typeIt.hasNext() && nodeIt.hasNext()){
+            Map.Entry<String,ASTType> t = typeIt.next();
+            Map.Entry<String,ASTNode> n = nodeIt.next();
+
+
+            if(t.getValue() instanceof  CompostType){
+                out.write(".field public "+ t.getKey() + " L"+t.getValue()+";\n");
+            }else{
+                out.write(".field public "+ t.getKey() + " "+t.getValue()+"\n");
+            }
+
+        }
+
+        out.write(".method public <init>()V\n");
+        out.write("aload_0\n");
+        out.write("invokenonvirtual java/lang/Object/<init>()V\n");
+        out.write("return\n");
+        out.write(".end method\n");
+
+        out.flush();
+
+    }
 }

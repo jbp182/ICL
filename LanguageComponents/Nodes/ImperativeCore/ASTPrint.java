@@ -5,12 +5,15 @@ import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.ASTNode;
+import LanguageComponents.Types.ASTBoolType;
+import LanguageComponents.Types.ASTIntType;
 import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 
 public class ASTPrint implements ASTNode {
 	
 	private ASTNode node;
+	private ASTType type;
 	
 	public ASTPrint(ASTNode node) {
 		this.node = node;
@@ -25,13 +28,22 @@ public class ASTPrint implements ASTNode {
 
 	@Override
 	public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
-		// TODO Auto-generated method stub
-		
+		//codeBlock.emit("aload_0");
+		node.compile(env, codeBlock);
+		codeBlock.emit("dup");
+		codeBlock.emit(" getstatic java/lang/System/out Ljava/io/PrintStream;");
+		codeBlock.emit("swap");
+
+		if (type instanceof ASTIntType || type instanceof ASTBoolType)
+			codeBlock.emit("invokestatic java/lang/String/valueOf(I)Ljava/lang/String;");
+
+		codeBlock.emit("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
 	}
 
 	@Override
 	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
-		return node.typeCheck(env);
+		type = node.typeCheck(env);
+		return type;
 	}
 	
 

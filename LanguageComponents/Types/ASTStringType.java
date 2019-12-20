@@ -1,6 +1,6 @@
 package LanguageComponents.Types;
 
-public class ASTStringType implements ASTType {
+public class ASTStringType extends CompostType {
 	private static ASTType singleton;
 	
 	public static ASTType getInstance() {
@@ -12,7 +12,7 @@ public class ASTStringType implements ASTType {
 	
 	@Override
 	public String toString() {
-		return "S";
+		return "java/lang/String";
 	}
 
 }

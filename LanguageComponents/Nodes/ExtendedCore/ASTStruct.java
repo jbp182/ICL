@@ -4,21 +4,19 @@ import Exceptions.TypeError;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
+import LanguageComponents.Environments.IdGenerator;
 import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Types.ASTStringType;
 import LanguageComponents.Types.ASTStructType;
 import LanguageComponents.Types.ASTType;
+import LanguageComponents.Types.CompostType;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VStruct;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //TODO
 public class ASTStruct implements ASTNode {
-
 
     private Map<String,ASTNode> structAsMap;
     private Map<String,ASTType> structTypes;
@@ -28,21 +26,6 @@ public class ASTStruct implements ASTNode {
         this.structAsMap = structAsMap;
         this.structTypes = structTypes;
     }
-    
-    // TODO - choose constructor
-//    public ASTStruct(List<String> ids, List<ASTType> types, List<ASTNode> inits) {
-//    	
-//    	Iterator<String> itId = ids.iterator();
-//    	Iterator<ASTType> itType = types.iterator();
-//    	Iterator<ASTNode> itV = inits.iterator();
-//    	String id;
-//    	while (itId.hasNext() && itType.hasNext() && itV.hasNext()) {
-//    		id = itId.next();
-//    		structAsMap.put(id, itV.next());
-//    		structTypes.put(id, itType.next());
-//    	}
-//    	
-//    }
 
     @Override
     public IValue eval(Environment<IValue> env) {
@@ -57,19 +40,52 @@ public class ASTStruct implements ASTNode {
 
     @Override
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
+        codeBlock.emit("new " + structType);
+        codeBlock.emit("dup");
+        codeBlock.emit("invokespecial "+structType+"/<init>()V");
 
+        Iterator<Map.Entry<String,ASTType>> typeIt = structTypes.entrySet().iterator();
+        Iterator<Map.Entry<String,ASTNode>> nodeIt = structAsMap.entrySet().iterator();
+
+        while(typeIt.hasNext() && nodeIt.hasNext()){
+            Map.Entry<String,ASTType> t = typeIt.next();
+            Map.Entry<String,ASTNode> n = nodeIt.next();
+
+            codeBlock.emit("dup");
+
+            n.getValue().compile(env, codeBlock);
+            
+
+            if(t.getValue() instanceof CompostType){
+                codeBlock.emit("putfield "+ structType+"/"+t.getKey()+" L"+t.getValue()+";");
+            } else{
+                codeBlock.emit("putfield "+ structType+"/"+t.getKey()+" "+t.getValue());
+            }
+
+        }
+
+        codeBlock.buildStruct(structType,this.structAsMap,this.structTypes);
     }
 
     @Override
     public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
-        
-    	List<ASTType> types = new LinkedList();
-    	
-    	for(Map.Entry<String,ASTType> t : structTypes.entrySet()){
+
+        List<ASTType> types = new LinkedList();
+        Iterator<Map.Entry<String,ASTType>> typeIt = structTypes.entrySet().iterator();
+        Iterator<Map.Entry<String,ASTNode>> nodeIt = structAsMap.entrySet().iterator();
+
+    	while(typeIt.hasNext() && nodeIt.hasNext()){
+            Map.Entry<String,ASTType> t = typeIt.next();
+            Map.Entry<String,ASTNode> n = nodeIt.next();
+            ASTType nType = n.getValue().typeCheck(env);
+
+            if(!nType.equals(t.getValue()))
+                throw new TypeError("Different Type Expected");
+
             types.add(t.getValue());
         }
     	
-    	this.structType = ASTStructType.getInstance(types);
+    	this.structType = ASTStructType.getInstance(types,IdGenerator.genStructId(),this.structTypes);
     	return structType;
     }
 

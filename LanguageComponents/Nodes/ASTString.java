@@ -24,7 +24,7 @@ public class ASTString implements ASTNode {
 
 	@Override
 	public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
-		codeBlock.emit("ldc " + str.getval());
+		codeBlock.emit("ldc " + "\"" + str.getval()+ "\"");
 	}
 
 	@Override

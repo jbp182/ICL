@@ -5,7 +5,9 @@ import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.ASTNode;
+import LanguageComponents.Types.ASTStructType;
 import LanguageComponents.Types.ASTType;
+import LanguageComponents.Types.CompostType;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VStruct;
 //import sun.tools.tree.Vset;
@@ -16,6 +18,9 @@ public class ASTField implements ASTNode {
 
     private ASTNode struct;
     private String id;
+
+    private ASTType structType;
+    private ASTType type;
 
     public ASTField(ASTNode node,String id){
         this.struct = node;
@@ -31,17 +36,30 @@ public class ASTField implements ASTNode {
 
         VStruct vStruct = (VStruct)value;
 
-
         return vStruct.getValue(id);
     }
 
     @Override
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
+        struct.compile(env,codeBlock);
 
+        if(type instanceof CompostType){
+            codeBlock.emit("getfield " + structType + "/"+id+" L" + type +";");
+        }
+        else{
+            codeBlock.emit("getfield " + structType + "/"+id+" " + type);
+        }
     }
 
     @Override
     public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
-        return null;
+        structType = struct.typeCheck(env);
+
+        if(!(structType instanceof ASTStructType)){
+            throw new TypeError("Not a struct");
+        }
+
+        type = ((ASTStructType)structType).getIdType(id);
+        return type;
     }
 }

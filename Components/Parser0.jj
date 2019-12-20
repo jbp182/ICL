@@ -303,7 +303,7 @@ ASTNode F() :
 			{ sNodes.put(id.image, t); sTypes.put(id.image, type); }
 		( < SEQ > id=< Id > <COLON> type=getType() < EQ > t=E()
 			{ sNodes.put(id.image, t); sTypes.put(id.image, type); }
-		)*
+		)* <RCB>
 		{ t = new ASTStruct(sNodes, sTypes); }
    	| id=< Id > { t = new ASTId( id.image ); }
    )

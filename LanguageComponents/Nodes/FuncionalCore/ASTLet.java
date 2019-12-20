@@ -6,6 +6,7 @@ import LanguageComponents.Types.CompostType;
 import LanguageComponents.Values.IValue;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import LanguageComponents.Environments.CodeBlock;
@@ -61,6 +62,8 @@ public class ASTLet implements ASTNode {
 		Iterator<ASTType> itType = types.iterator();
 		Iterator<ASTNode> itNodes = inits.iterator();
 
+		List<ASTType> typesTmp = new LinkedList<>();
+
 		while ( itId.hasNext() && itType.hasNext() && itNodes.hasNext()) {
 			String id = itId.next();
 			ASTType type = itType.next();
@@ -70,8 +73,12 @@ public class ASTLet implements ASTNode {
 				throw new TypeError("Type Error");
 			}
 
-			newEnv.assoc(id, type);
+			typesTmp.add(nodeType);
+
+			newEnv.assoc(id, nodeType);
 		}
+
+		this.types = typesTmp;
 		
 		return body.typeCheck(newEnv);
 	}

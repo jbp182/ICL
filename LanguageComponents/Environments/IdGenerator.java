@@ -6,6 +6,7 @@ public class IdGenerator {
     static int labelCounter = 1;
     static int refCounter = 0;
     static int functionCounter = 0;
+    static int structCounter = 0;
 
     public static String genFrameName() {
         return "f"+frameCounter++;
@@ -26,4 +27,6 @@ public class IdGenerator {
     public static String genFunctionId(){
         return "closure_f"+functionCounter++;
     }
+
+    public static String genStructId() { return "struct" + structCounter++;}
 }
