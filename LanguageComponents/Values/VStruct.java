@@ -1,6 +1,7 @@
 package LanguageComponents.Values;
 
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class VStruct implements IValue {
@@ -29,4 +30,11 @@ public class VStruct implements IValue {
         return structAsMap.get(id);
     }
 
+
+    public IValue sumStruct(VStruct struct){
+        Map<String, IValue> result = new HashMap<>();
+        result.putAll(this.structAsMap);
+        result.putAll(struct.structAsMap);
+        return new VStruct(result);
+    }
 }

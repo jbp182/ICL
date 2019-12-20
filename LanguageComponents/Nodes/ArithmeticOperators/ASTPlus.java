@@ -8,6 +8,7 @@ import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.ASTNode;
+import LanguageComponents.Values.VStruct;
 
 public class ASTPlus implements ASTNode {
 	
@@ -29,6 +30,12 @@ public class ASTPlus implements ASTNode {
 			if (v2 instanceof VInt)
 				return new VInt( ((VInt)v1).getval() + ((VInt)v2).getval() );
 		}
+		else if (v1 instanceof VStruct){
+			IValue v2 = right.eval(env);
+			if(v2 instanceof VStruct){
+				return ((VStruct)v1).sumStruct((VStruct)v2);
+			}
+		}
 		throw new TypeError("illegal arguments to + operator");
 	}
 
@@ -48,6 +55,8 @@ public class ASTPlus implements ASTNode {
 	}
 
 	private void compileStruct(CompilerEnvironment env, CodeBlock codeBlock){
+		left.compile(env,codeBlock);
+		right.compile(env,codeBlock);
 
 	}
 
