@@ -1,5 +1,6 @@
 package LanguageComponents.Nodes.ArithmeticOperators;
 import Exceptions.TypeError;
+import LanguageComponents.Types.ASTIntType;
 import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VInt;
@@ -44,10 +45,11 @@ public class ASTMul implements ASTNode {
 		leftType = left.typeCheck(env);
 		rightType = right.typeCheck(env);
 
-		if(!leftType.equals(rightType)){
-			throw new TypeError("Mul different Types Error");
-		}
+		if( leftType instanceof ASTIntType 
+				&& rightType instanceof ASTIntType )
+			return leftType;
+		
+		throw new TypeError("Not an int. Cannot multiply.");
 
-		return leftType;
 	}
 }

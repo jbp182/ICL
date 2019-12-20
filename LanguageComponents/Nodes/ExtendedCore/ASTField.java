@@ -8,16 +8,16 @@ import LanguageComponents.Nodes.ASTNode;
 import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VStruct;
-import sun.tools.tree.Vset;
+//import sun.tools.tree.Vset;
 
-public class ASTStructFieldOp implements ASTNode {
+public class ASTField implements ASTNode {
 
     public static final String TYPE_CHECK_I = "Can check values different to struct";
 
     private ASTNode struct;
     private String id;
 
-    public ASTStructFieldOp(ASTNode node,String id){
+    public ASTField(ASTNode node,String id){
         this.struct = node;
         this.id = id;
     }

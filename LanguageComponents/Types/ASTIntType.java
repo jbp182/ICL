@@ -1,6 +1,6 @@
 package LanguageComponents.Types;
 
-public class ASTIntType extends ASTType {
+public class ASTIntType implements ASTType {
 
 	private static ASTType singleton;
 	

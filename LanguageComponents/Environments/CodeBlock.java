@@ -9,7 +9,6 @@ import LanguageComponents.Types.CompostType;
 import java.io.*;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class CodeBlock {
     private StringBuilder builder;
@@ -246,6 +245,7 @@ public class CodeBlock {
             System.out.println("Generated: " + f.getPath());
 
         out.flush();
+        out.close();
     }
 
     public void createFunClass(String id, ASTNode body,ASTFunType type,List<ASTType> typeList,CompilerEnvironment env,List<String> ids){
@@ -267,7 +267,7 @@ public class CodeBlock {
         out.write(".super java/lang/Object\n");
         out.write(".implements "+type + "\n");
 
-        if(env.getAncestor() != null)
+        if(env.getAncestor() != null && !env.toString().equals("f0"))
             out.write(".field public sl L"+env.getAncestor()+";" + "\n");
         else
             out.write(".field public sl Ljava/lang/Object;\n");
@@ -299,8 +299,12 @@ public class CodeBlock {
         out.write("invokespecial "+ env +"/<init>()V\n");
         out.write("dup\n");
         out.write("aload 0\n");
-        out.write("getfield " + id+"/sl L"+ env.getAncestor() +";\n"); //todo suport 0 frames
-        out.write("putfield " + env+"/sl L"+ env.getAncestor() +";\n");
+        String anc;
+        if (env.toString().equals("f0"))
+        	anc = "java/lang/Object";
+        else anc = env.getAncestor().toString();
+        out.write("getfield " + id+"/sl L"+ anc +";\n"); 
+        out.write("putfield " + env+"/sl L"+ anc +";\n");
         out.write("astore 9\n");
 
         int i = 1;
@@ -331,6 +335,7 @@ public class CodeBlock {
         out.write(" ireturn\n");
         out.write(".end method" + "\n");
         out.flush();
+        out.close();
     }
 
 

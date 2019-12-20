@@ -30,11 +30,10 @@ public class ASTWhile implements ASTNode {
     public IValue eval(Environment<IValue> env) {
     	IValue bool = cond.eval(env);
     	if (bool instanceof VBool) {
-        	IValue res = null;
         	env = env.beginScope();
         	
     		while ( ((VBool)bool).isTrue() ) {
-    			res = body.eval(env);
+    			body.eval(env);
     			bool = cond.eval(env);
     		}
     		

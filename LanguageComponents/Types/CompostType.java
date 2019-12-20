@@ -1,4 +1,4 @@
 package LanguageComponents.Types;
 
-public class CompostType extends ASTType {
+public class CompostType implements ASTType {
 }

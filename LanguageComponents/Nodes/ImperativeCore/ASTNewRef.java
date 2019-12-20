@@ -47,6 +47,6 @@ public class ASTNewRef implements ASTNode {
     @Override
     public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
         rightType = right.typeCheck(env);
-        return ASTType.build(ASTType.REF,rightType);
+        return ASTRefType.getInstance(rightType);
     }
 }

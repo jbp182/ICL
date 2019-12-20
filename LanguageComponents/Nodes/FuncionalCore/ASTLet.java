@@ -1,7 +1,6 @@
 package LanguageComponents.Nodes.FuncionalCore;
 
 import Exceptions.TypeError;
-import LanguageComponents.Nodes.ImperativeCore.ASTNewRef;
 import LanguageComponents.Types.ASTType;
 import LanguageComponents.Types.CompostType;
 import LanguageComponents.Values.IValue;

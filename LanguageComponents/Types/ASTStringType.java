@@ -1,17 +1,18 @@
 package LanguageComponents.Types;
 
-public class ASTBoolType implements ASTType {
+public class ASTStringType implements ASTType {
 	private static ASTType singleton;
 	
 	public static ASTType getInstance() {
-		if(singleton == null)
-			singleton = new ASTBoolType();
+		if (singleton == null)
+			singleton = new ASTStringType();
 		
 		return singleton;
 	}
-
+	
 	@Override
 	public String toString() {
-		return "I";
+		return "S";
 	}
+
 }

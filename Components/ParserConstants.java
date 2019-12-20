@@ -86,7 +86,19 @@ public interface ParserConstants {
   /** RegularExpression Id. */
   int REF_T = 40;
   /** RegularExpression Id. */
-  int Id = 41;
+  int STR_T = 41;
+  /** RegularExpression Id. */
+  int PRINTLN = 42;
+  /** RegularExpression Id. */
+  int LCB = 43;
+  /** RegularExpression Id. */
+  int RCB = 44;
+  /** RegularExpression Id. */
+  int QUOTE = 45;
+  /** RegularExpression Id. */
+  int DOT = 46;
+  /** RegularExpression Id. */
+  int Id = 47;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -134,6 +146,12 @@ public interface ParserConstants {
     "\"int\"",
     "\"bool\"",
     "\"ref\"",
+    "\"string\"",
+    "\"println\"",
+    "\"{\"",
+    "\"}\"",
+    "\"\\\"\"",
+    "\".\"",
     "<Id>",
   };
 

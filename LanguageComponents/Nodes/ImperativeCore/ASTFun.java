@@ -37,7 +37,6 @@ public class ASTFun implements ASTNode {
 
     @Override
     public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
-        //TODO
         List<String> genIds = new LinkedList<>();
         env = env.beginScope(codeBlock,false);
         for(String paramID : paramIds){
@@ -46,19 +45,22 @@ public class ASTFun implements ASTNode {
             env.assoc(paramID,id);
         }
         String id = IdGenerator.genFunctionId();
-        createCloser(codeBlock,id,env);
+        createClosure(codeBlock,id,env);
         codeBlock.createFunClass(id,body,funType,this.paramTypes,env,genIds);
         env = env.endScope(codeBlock,paramIds,paramTypes,false);
 
     }
 
-    private void createCloser(CodeBlock codeBlock,String id,CompilerEnvironment env){
+    private void createClosure(CodeBlock codeBlock,String id,CompilerEnvironment env){
         codeBlock.emit("new " + id);
         codeBlock.emit("dup");
         codeBlock.emit("invokespecial "+id+"/<init>()V");
         codeBlock.emit("dup");
         codeBlock.emit("aload 9");
-        codeBlock.emit("putfield "+id+"/sl L"+env.getAncestor()+";");
+        if(env.toString().equals("f0"))
+            codeBlock.emit("putfield "+id+"/sl Ljava/lang/Object;");
+        else
+        	codeBlock.emit("putfield "+id+"/sl L"+env.getAncestor()+";");
         codeBlock.buildFunInterfaceIfDoesNotExist(funType);
     }
 

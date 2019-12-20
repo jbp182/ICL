@@ -12,11 +12,14 @@ import LanguageComponents.Nodes.FuncionalCore.*;
 import LanguageComponents.Nodes.ImperativeCore.*;
 import LanguageComponents.Nodes.LogicOperators.*;
 import LanguageComponents.Nodes.RelationalOperators.*;
+import LanguageComponents.Nodes.ExtendedCore.*;
 import LanguageComponents.Types.*;
 import java.io.FileInputStream;
 import java.io.File;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Parser {
 
@@ -139,7 +142,19 @@ TOKEN :
   |
   < BOOL_T: "bool" >
   |
-  < REF_T: "ref" > 
+  < REF_T: "ref" >
+  |
+  < STR_T: "string" >
+  |
+  < PRINTLN: "println" >
+  |
+  < LCB: "{" >
+  |
+  < RCB: "}" >
+  |
+  < QUOTE: "\"" >
+  |
+  < DOT: "." >
   | 
   < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
 }
@@ -177,13 +192,13 @@ ASTNode EA() :
 { Token op;
   ASTNode t1, t2; }
 {
-     t1=T() ( ( op=<PLUS> | op=<MINUS> | op=<AND> ) t2=EA()
+     t1=T() ( ( op=<PLUS> | op=<AND> ) t2=EA()
                  { if (op.kind == PLUS) 
                          t1 = new ASTPlus(t1,t2);
-                   else if (op.kind == MINUS)
-                   		 t1 = new ASTSub(t1,t2);
                    else t1 = new ASTAnd(t1,t2);
-                 } 
+                 }
+               | < MINUS > t2=F()
+           		 { t1 = new ASTSub(t1,t2); } 
                   ) *
      { return t1; } 
 }
@@ -208,6 +223,8 @@ ASTNode T() :
 	   				  		f1 = new ASTLower(f1,f2);
 	   				}
 				   )
+				| < DOT > op=< Id >
+					{ f1 = new ASTField(f1,op.image); }
      	        | ( ( op=<TIMES> | op=<DIV> | op=<OR> ) f2=T()
 			     { if (op.kind == TIMES)
 			     		f1 = new ASTMul(f1,f2);
@@ -252,9 +269,12 @@ ASTNode F() :
   ASTType type;
   List<ASTNode> inits = new LinkedList();
   List<String> ids = new LinkedList();
-  List<ASTType> types = new LinkedList();}
+  List<ASTType> types = new LinkedList();
+  Map<String,ASTNode> sNodes = new HashMap();
+  Map<String,ASTType> sTypes = new HashMap();}
 {
     (  n=< Num >   {  t = new ASTNum(Integer.parseInt(n.image)); }
+   | < QUOTE > n=< Id > < QUOTE > 	{ t = new ASTString(n.image); }  
    | <LPAR> t=EM() <RPAR>
    | < MINUS > t=F() { t = new ASTMul(new ASTNum(-1), t); }
    | < PLUS > t=F()
@@ -277,6 +297,14 @@ ASTNode F() :
    		{ t = new ASTLet(ids, types, inits, body); }
     | <FUN> PL(ids, types) <IS> body=EM() <END>
 		{ t = new ASTFun(ids, types, body); }
+	| <PRINTLN> t = E()
+		{ t = new ASTPrint(t); }
+	| <LCB> id=< Id > <COLON> type=getType() < EQ > t=E()
+			{ sNodes.put(id.image, t); sTypes.put(id.image, type); }
+		( < SEQ > id=< Id > <COLON> type=getType() < EQ > t=E()
+			{ sNodes.put(id.image, t); sTypes.put(id.image, type); }
+		)*
+		{ t = new ASTStruct(sNodes, sTypes); }
    	| id=< Id > { t = new ASTId( id.image ); }
    )
 
@@ -285,8 +313,7 @@ ASTNode F() :
 
 
 ASTType getType() :
-{ ASTType t;
-  ASTType type;
+{ ASTType t, type;
   List<ASTType> param = new LinkedList<ASTType>(); }
 {
   (
@@ -300,6 +327,14 @@ ASTType getType() :
     	 < RPAR > t=getType()
     	 	{ type = ASTFunType.getInstance( param, t ); }
     |
+    < LCB > t=getType()
+    		{ param.add(t); }
+    	( < SEQ > t=getType()
+    		{ param.add(t); }
+   		)*
+   		< RCB >
+   			{ type = ASTStructType.getInstance( param ); }
+    |
     < REF_T > t=getType()
     	{ type = ASTRefType.getInstance( t ); }
     |
@@ -308,6 +343,9 @@ ASTType getType() :
     |
     < BOOL_T >
     	{ type = ASTBoolType.getInstance(); }
+    |
+    < STR_T >
+    	{ type = ASTStringType.getInstance(); } 
   )
   { return type; }
 }

@@ -8,6 +8,10 @@ public class VStr implements IValue {
 		value = s;
 	}
 	
+	public String getval() {
+		return value;
+	}
+	
 
 	@Override
 	public void show() {
