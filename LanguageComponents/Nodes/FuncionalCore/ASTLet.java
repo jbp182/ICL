@@ -67,7 +67,7 @@ public class ASTLet implements ASTNode {
 		while ( itId.hasNext() && itType.hasNext() && itNodes.hasNext()) {
 			String id = itId.next();
 			ASTType type = itType.next();
-			ASTType nodeType = itNodes.next().typeCheck(env);
+			ASTType nodeType = itNodes.next().typeCheck(newEnv);
 
 			if(!type.equals(nodeType)){
 				throw new TypeError("Type Error");
