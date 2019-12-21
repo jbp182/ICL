@@ -33,6 +33,10 @@ public class ASTStructType extends CompostType {
 		return paramTypes;
 	}
 
+	public Map<String, ASTType> getStructTypes() {
+		return structTypes;
+	}
+
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

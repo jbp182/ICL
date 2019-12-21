@@ -47,6 +47,7 @@ public class Tests {
 	@Test public void test27() { test(27); }
 	@Test public void test28() { test(28); }
 	@Test public void test29() { test(29); }
+	@Test public void test30() { test(30); }
 
 	private static final File BASE = new File("src/tests");
 

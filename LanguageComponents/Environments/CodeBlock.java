@@ -343,15 +343,15 @@ public class CodeBlock {
         runProcess("java -cp ./target Main");
     }
 
-    public void buildStruct(ASTType type, Map<String, ASTNode> structAsMap, Map<String,ASTType> structTypes) {
+    public void buildStruct(ASTType type, Map<String,ASTType> structTypes) {
         try {
-            buildStructWithExceptions(type,structAsMap,structTypes);
+            buildStructWithExceptions(type,structTypes);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void buildStructWithExceptions(ASTType type, Map<String, ASTNode> structAsMap, Map<String,ASTType> structTypes) throws IOException {
+    private void buildStructWithExceptions(ASTType type, Map<String,ASTType> structTypes) throws IOException {
         File f = new File("./target/"+type+".j");
         f.createNewFile();
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
@@ -360,13 +360,10 @@ public class CodeBlock {
         out.write(".class " + type + "\n");
         out.write(".super java/lang/Object\n");
 
-
         Iterator<Map.Entry<String,ASTType>> typeIt = structTypes.entrySet().iterator();
-        Iterator<Map.Entry<String,ASTNode>> nodeIt = structAsMap.entrySet().iterator();
 
-        while(typeIt.hasNext() && nodeIt.hasNext()){
+        while(typeIt.hasNext()){
             Map.Entry<String,ASTType> t = typeIt.next();
-            Map.Entry<String,ASTNode> n = nodeIt.next();
 
 
             if(t.getValue() instanceof  CompostType){

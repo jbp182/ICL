@@ -63,7 +63,7 @@ public class ASTStruct implements ASTNode {
 
         }
 
-        codeBlock.buildStruct(structType,this.structAsMap,this.structTypes);
+        codeBlock.buildStruct(structType,this.structTypes);
     }
 
     @Override
@@ -72,6 +72,7 @@ public class ASTStruct implements ASTNode {
         List<ASTType> types = new LinkedList();
         Iterator<Map.Entry<String,ASTType>> typeIt = structTypes.entrySet().iterator();
         Iterator<Map.Entry<String,ASTNode>> nodeIt = structAsMap.entrySet().iterator();
+        Map<String,ASTType> tmp = new HashMap<>();
 
     	while(typeIt.hasNext() && nodeIt.hasNext()){
             Map.Entry<String,ASTType> t = typeIt.next();
@@ -82,8 +83,11 @@ public class ASTStruct implements ASTNode {
                 throw new TypeError("Different Type Expected");
 
             types.add(t.getValue());
+            tmp.put(t.getKey(),nType);
         }
-    	
+
+    	this.structTypes = tmp;
+
     	this.structType = ASTStructType.getInstance(types,IdGenerator.genStructId(),this.structTypes);
     	return structType;
     }
