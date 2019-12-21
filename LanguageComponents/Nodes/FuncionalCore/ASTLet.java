@@ -37,7 +37,7 @@ public class ASTLet implements ASTNode {
 		Iterator<String> itId = ids.iterator();
 		Iterator<ASTNode> itInit = inits.iterator();
 		while ( itId.hasNext() && itInit.hasNext() ) {
-			IValue v1 = itInit.next().eval(env);
+			IValue v1 = itInit.next().eval(newEnv);
 			newEnv.assoc(itId.next(), v1);
 		}
 		
