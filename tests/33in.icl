@@ -1,0 +1,1 @@
+let p1 : {string;int} = {name:string = "joe"; age:int = 22} , p2 : {string;int} = {name:string = "mary" ; age:int = 5} , p3 : {string;int;int} = p1 + {tag:int = -2} in println (p1.age + p2.age); println (p3.tag + p3.age) end
