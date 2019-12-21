@@ -10,7 +10,8 @@ public class VRef implements IValue {
 
     @Override
     public void show() {
-        System.out.println();
+        System.out.print("Ref: ");
+        value.show();
     }
 
     public void set(IValue value){

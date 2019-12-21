@@ -11,7 +11,6 @@ public class VStr implements IValue {
 	public String getval() {
 		return value;
 	}
-	
 
 	@Override
 	public void show() {

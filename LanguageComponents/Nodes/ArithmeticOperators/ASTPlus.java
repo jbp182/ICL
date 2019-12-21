@@ -2,16 +2,14 @@ package LanguageComponents.Nodes.ArithmeticOperators;
 import Exceptions.TypeError;
 import LanguageComponents.Environments.IdGenerator;
 import LanguageComponents.Nodes.ExtendedCore.ASTStruct;
-import LanguageComponents.Types.ASTIntType;
-import LanguageComponents.Types.ASTStructType;
-import LanguageComponents.Types.ASTType;
-import LanguageComponents.Types.CompostType;
+import LanguageComponents.Types.*;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VInt;
 import LanguageComponents.Environments.CodeBlock;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.ASTNode;
+import LanguageComponents.Values.VStr;
 import LanguageComponents.Values.VStruct;
 
 import java.util.HashMap;
@@ -46,17 +44,39 @@ public class ASTPlus implements ASTNode {
 			if(v2 instanceof VStruct){
 				return ((VStruct)v1).sumStruct((VStruct)v2);
 			}
+		} else if (v1 instanceof VStr){
+			IValue v2 = right.eval(env);
+			if(v2 instanceof VStr){
+				return new VStr( ((VStr)v1).getval() + ((VStr)v2).getval());
+			}
 		}
 		throw new TypeError("illegal arguments to + operator");
 	}
+
+
 
 	@Override
 	public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
 		if(leftType instanceof ASTIntType){
 			compileInt(env, codeBlock);
+		}else if(leftType instanceof ASTStringType){
+			compileString(env,codeBlock);
 		}else{
 			compileStruct(env,codeBlock);
 		}
+	}
+
+	private void compileString(CompilerEnvironment env, CodeBlock codeBlock){
+
+		codeBlock.emit("new java/lang/StringBuffer");
+		codeBlock.emit("dup");
+		codeBlock.emit("invokespecial java/lang/StringBuffer/<init>()V");
+		left.compile(env,codeBlock);
+		codeBlock.emit("invokevirtual java/lang/StringBuffer/append(Ljava/lang/String;)Ljava/lang/StringBuffer;");
+		right.compile(env,codeBlock);
+		codeBlock.emit("invokevirtual java/lang/StringBuffer/append(Ljava/lang/String;)Ljava/lang/StringBuffer;");
+		codeBlock.emit("invokevirtual java/lang/StringBuffer/toString()Ljava/lang/String;");
+
 	}
 
 	private void compileInt(CompilerEnvironment env, CodeBlock codeBlock){
@@ -118,6 +138,11 @@ public class ASTPlus implements ASTNode {
 		if( leftType instanceof ASTIntType 
 				&& rightType instanceof ASTIntType ){
 
+			resultType = leftType;
+
+			return leftType;
+		}
+		else if(leftType instanceof ASTStringType && rightType instanceof ASTStringType){
 			resultType = leftType;
 
 			return leftType;

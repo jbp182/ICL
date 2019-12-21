@@ -28,7 +28,6 @@ public class ASTPrint implements ASTNode {
 
 	@Override
 	public void compile(CompilerEnvironment env, CodeBlock codeBlock) {
-		//codeBlock.emit("aload_0");
 		node.compile(env, codeBlock);
 		codeBlock.emit("dup");
 		codeBlock.emit(" getstatic java/lang/System/out Ljava/io/PrintStream;");

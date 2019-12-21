@@ -44,7 +44,17 @@ public class VClosure implements IValue {
 
 	@Override
 	public void show() {
+		StringBuilder builder = new StringBuilder();
 
+		builder.append("fun(");
+
+		for(String param : this.param){
+			builder.append(" "+param);
+		}
+
+		builder.append(")");
+
+		System.out.println(builder.toString());
 	}
 
 }
