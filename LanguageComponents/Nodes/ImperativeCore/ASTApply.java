@@ -75,7 +75,6 @@ public class ASTApply implements ASTNode {
 	@Override
 	public ASTType typeCheck(Environment<ASTType> env) throws TypeError {
 		funType = funName.typeCheck(env);
-		System.out.println(funType.toString());
 		if (funType instanceof ASTFunType) {
 			ASTFunType t = (ASTFunType) funType;
 			
@@ -88,11 +87,12 @@ public class ASTApply implements ASTNode {
 			while( itTypes.hasNext() && itArgs.hasNext() ) {
 				type = itTypes.next();
 				arg = itArgs.next();
-				if ( !type.equals(arg.typeCheck(env)) )
+				if (!type.equals(arg.typeCheck(env)))
 					throw new TypeError("Arguments types do not match with previously declared types.");
-				
+
+			}
 				return t.getReturnType();
-			}			
+
 		}
 		throw new TypeError("Not a function.");
 		
