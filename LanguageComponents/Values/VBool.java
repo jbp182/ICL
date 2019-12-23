@@ -16,4 +16,5 @@ public class VBool implements IValue {
     public boolean isTrue(){
         return this.value;
     }
+    
 }

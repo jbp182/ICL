@@ -1,0 +1,1 @@
+println ( true || true && false || false); println ( true || false && false || false ); println( false || true && false || false); println (false || false && true || true); println(false || false && true || false); false || false && false || true

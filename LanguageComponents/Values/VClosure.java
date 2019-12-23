@@ -3,7 +3,9 @@ package LanguageComponents.Values;
 import LanguageComponents.Environments.CompilerEnvironment;
 import LanguageComponents.Environments.Environment;
 import LanguageComponents.Nodes.ASTNode;
+import LanguageComponents.Types.ASTType;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,6 +57,36 @@ public class VClosure implements IValue {
 		builder.append(")");
 
 		System.out.println(builder.toString());
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof VClosure))
+			return false;
+		
+		VClosure other = (VClosure)obj;
+		if (param.size() != other.param.size())
+			return false;
+		else {
+			Iterator<String> it = param.iterator();
+			Iterator<String> itOther = other.param.iterator();
+			while(it.hasNext() && itOther.hasNext()) {
+				if (!it.next().equals(itOther.next()))
+					return false;
+			}
+		}
+		
+		if (body == null) {
+			if (other.body != null)
+				return false;
+		} else if (!body.equals(other.body))
+			return false;
+		
+		return true;
 	}
 
 }

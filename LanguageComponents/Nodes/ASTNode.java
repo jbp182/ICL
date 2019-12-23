@@ -14,7 +14,7 @@ public interface ASTNode {
 	 * @param env
 	 * @return Result of the INode (IValue)
 	 */
-	IValue eval(Environment<IValue> env);
+	IValue eval(Environment<IValue> env) throws TypeError;
 
 	/**
 	 * Compiles the ASTNode and outputs the result to

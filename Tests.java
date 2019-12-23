@@ -52,6 +52,10 @@ public class Tests {
 	@Test public void test32() { test(32); }
 	@Test public void test33() { test(33); }
 	@Test public void test34() { test(34); }
+	@Test public void test35() { test(35); }
+	@Test public void test36() { test(36); }
+	@Test public void test37() { test(37); }
+	@Test public void test38() { test(38); }
 
 	private static final File BASE = new File("src/tests");
 

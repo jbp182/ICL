@@ -10,6 +10,7 @@ import LanguageComponents.Types.ASTBoolType;
 import LanguageComponents.Types.ASTType;
 import LanguageComponents.Values.IValue;
 import LanguageComponents.Values.VBool;
+import LanguageComponents.Values.VInt;
 
 public class ASTEquals implements ASTNode {
 
@@ -27,7 +28,15 @@ public class ASTEquals implements ASTNode {
 
     @Override
     public IValue eval(Environment<IValue> env) {
-    	boolean res = left.eval(env) == right.eval(env);
+    	IValue v1 = left.eval(env);
+    	IValue v2 = right.eval(env);
+    	boolean res;
+    	if (v1 instanceof VInt && v2 instanceof VInt)
+    		res = ((VInt)v1).getval() == ((VInt)v2).getval();
+    	else if (v1 instanceof VBool && v2 instanceof VBool)
+    		res = ((VBool)v1).isTrue() == ((VBool)v2).isTrue();
+    	else
+    		throw new TypeError("Error: operation '=='. Only accepts int or bool type.");
     	return new VBool( res );
     }
 
